@@ -1,0 +1,5 @@
+html_document:
+    includes:
+        in_header: includes/in_header.html
+        before_body: includes/before_body.html
+        after_body: includes/after_body.html
