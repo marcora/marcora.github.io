@@ -1,0 +1,20 @@
+---
+title: "DNA-seq"
+author: "Edoardo “Dado” Marcora"
+date: "August 2, 2015"
+output: html_document
+---
+
+## Variant discovery and genotyping
+
+- Read data in FASTQ format and reference genome in FASTA format
+- QC read data using [FASTQC](http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/)
+- Remove adapter sequences from reads using [cutadapt](http://cutadapt.readthedocs.org/)
+- Trim and filter reads using [cutadapt](http://cutadapt.readthedocs.org/)
+- Align reads to reference genome using [BWA-MEM](https://github.com/lh3/bwa) FASTQ + FASTA -> SAM
+- Mark duplicate reads in SAM file using [samblaster](https://github.com/GregoryFaust/samblaster)
+- Convert SAM to BAM file using [samtools view](http://www.htslib.org/doc/samtools.html)
+- Sort BAM file using [samtools sort](http://www.htslib.org/doc/samtools.html)
+- Index BAM file using [samtools index](http://www.htslib.org/doc/samtools.html)
+- Index reference genome in FASTA format using [samtools faidx](http://www.htslib.org/doc/samtools.html)
+- View aligned reads using [IGV](http://www.broadinstitute.org/igv/home)

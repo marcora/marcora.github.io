@@ -1,3 +1,9 @@
 ---
 title: Edoardo &quot;Dado&quot; Marcora's notes
 ---
+
+- NGS applications
+  - RNA-seq
+  - ChIP-seq
+  - DNA-seq
+    - [Variant discovery and genotyping](./methods/ngs/dna-seq/)
