@@ -7,14 +7,36 @@ output: html_document
 
 ## Variant discovery and genotyping
 
-- Read data in FASTQ format and reference genome in FASTA format
+- Read data in [FASTQ format](https://en.wikipedia.org/wiki/FASTQ_format) and [reference genome](https://en.wikipedia.org/wiki/Reference_genome) in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format)
 - QC read data using [FASTQC](http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/)
 - Remove adapter sequences from reads using [cutadapt](http://cutadapt.readthedocs.org/)
 - Trim and filter reads using [cutadapt](http://cutadapt.readthedocs.org/)
-- Align reads to reference genome using [BWA-MEM](https://github.com/lh3/bwa) FASTQ + FASTA -> SAM
+- Align reads to reference genome using [BWA-MEM](https://github.com/lh3/bwa) [FASTQ + FASTA &rarr; SAM]
 - Mark duplicate reads in SAM file using [samblaster](https://github.com/GregoryFaust/samblaster)
-- Convert SAM to BAM file using [samtools view](http://www.htslib.org/doc/samtools.html)
+- Convert SAM to BAM file using [samtools view](http://www.htslib.org/doc/samtools.html) [SAM &rarr; BAM]
 - Sort BAM file using [samtools sort](http://www.htslib.org/doc/samtools.html)
 - Index BAM file using [samtools index](http://www.htslib.org/doc/samtools.html)
 - Index reference genome in FASTA format using [samtools faidx](http://www.htslib.org/doc/samtools.html)
 - View aligned reads using [IGV](http://www.broadinstitute.org/igv/home)
+- Call variants using [GATK Best Practices](https://www.broadinstitute.org/gatk/guide/best-practices?bpm=DNAseq) or [FreeBayes](https://github.com/ekg/freebayes) [BAM &rarr; VCF]
+    - [FreeBayes tutorial](http://clavius.bc.edu/~erik/CSHL-advanced-sequencing/freebayes-tutorial.html)
+- Filter variants by quality using vcffilter from [vcflib](https://github.com/ekg/vcflib)
+- Inspect variants using stats from [bcftools](http://samtools.github.io/bcftools/)
+    - See also [bgzip and tabix](http://www.htslib.org/doc/tabix.html)
+- Compare variants to the [Genome in a bottle](https://sites.stanford.edu/abms/giab) (GIAB) "gold standard"
+- Annotate variants (e.g., with rsids from dbSNP) using annotate from [bcftools](http://samtools.github.io/bcftools/)
+- View variants using view from [bcftools](http://samtools.github.io/bcftools/)
+- Filter variants based on predicted functional impact using:
+    - [ANNOVAR](http://annovar.openbioinformatics.org/)
+    - [VEP](http://www.ensembl.org/info/docs/tools/vep/index.html)
+    - snpEff
+    - See also [GEMINI](http://gemini.readthedocs.org/)
+
+
+  
+- [SAM/BAM and VCF formats](http://samtools.github.io/hts-specs/)
+- [Quanto](http://biostats.usc.edu/software) or [SEQPower](http://www.bioinformatics.org/spower/) for power calcs
+- [Bpipe](https://github.com/ssadedin/bpipe), [SpeedSeq](https://github.com/hall-lab/speedseq) or [bcbio](https://bcbio-nextgen.readthedocs.org/) for pipeline/workflow generation
+
+
+https://www.biostars.org/p/2909/

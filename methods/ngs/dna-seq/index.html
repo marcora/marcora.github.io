@@ -70,18 +70,41 @@ img {
 <div id="variant-discovery-and-genotyping" class="section level2">
 <h2>Variant discovery and genotyping</h2>
 <ul>
-<li>Read data in FASTQ format and reference genome in FASTA format</li>
+<li>Read data in <a href="https://en.wikipedia.org/wiki/FASTQ_format">FASTQ format</a> and <a href="https://en.wikipedia.org/wiki/Reference_genome">reference genome</a> in <a href="https://en.wikipedia.org/wiki/FASTA_format">FASTA format</a></li>
 <li>QC read data using <a href="http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/">FASTQC</a></li>
 <li>Remove adapter sequences from reads using <a href="http://cutadapt.readthedocs.org/">cutadapt</a></li>
 <li>Trim and filter reads using <a href="http://cutadapt.readthedocs.org/">cutadapt</a></li>
-<li>Align reads to reference genome using <a href="https://github.com/lh3/bwa">BWA-MEM</a> FASTQ + FASTA -&gt; SAM</li>
+<li>Align reads to reference genome using <a href="https://github.com/lh3/bwa">BWA-MEM</a> [FASTQ + FASTA → SAM]</li>
 <li>Mark duplicate reads in SAM file using <a href="https://github.com/GregoryFaust/samblaster">samblaster</a></li>
-<li>Convert SAM to BAM file using <a href="http://www.htslib.org/doc/samtools.html">samtools view</a></li>
+<li>Convert SAM to BAM file using <a href="http://www.htslib.org/doc/samtools.html">samtools view</a> [SAM → BAM]</li>
 <li>Sort BAM file using <a href="http://www.htslib.org/doc/samtools.html">samtools sort</a></li>
 <li>Index BAM file using <a href="http://www.htslib.org/doc/samtools.html">samtools index</a></li>
 <li>Index reference genome in FASTA format using <a href="http://www.htslib.org/doc/samtools.html">samtools faidx</a></li>
 <li>View aligned reads using <a href="http://www.broadinstitute.org/igv/home">IGV</a></li>
+<li>Call variants using <a href="https://www.broadinstitute.org/gatk/guide/best-practices?bpm=DNAseq">GATK Best Practices</a> or <a href="https://github.com/ekg/freebayes">FreeBayes</a> [BAM → VCF]
+<ul>
+<li><a href="http://clavius.bc.edu/~erik/CSHL-advanced-sequencing/freebayes-tutorial.html">FreeBayes tutorial</a></li>
+</ul></li>
+<li>Filter variants by quality using vcffilter from <a href="https://github.com/ekg/vcflib">vcflib</a></li>
+<li>Inspect variants using stats from <a href="http://samtools.github.io/bcftools/">bcftools</a>
+<ul>
+<li>See also <a href="http://www.htslib.org/doc/tabix.html">bgzip and tabix</a></li>
+</ul></li>
+<li>Compare variants to the <a href="https://sites.stanford.edu/abms/giab">Genome in a bottle</a> (GIAB) “gold standard”</li>
+<li>Annotate variants (e.g., with rsids from dbSNP) using annotate from <a href="http://samtools.github.io/bcftools/">bcftools</a></li>
+<li>View variants using view from <a href="http://samtools.github.io/bcftools/">bcftools</a></li>
+<li>Filter variants based on predicted functional impact using:
+<ul>
+<li><a href="http://annovar.openbioinformatics.org/">ANNOVAR</a></li>
+<li><a href="http://www.ensembl.org/info/docs/tools/vep/index.html">VEP</a></li>
+<li>snpEff</li>
+<li>See also <a href="http://gemini.readthedocs.org/">GEMINI</a></li>
+</ul></li>
+<li><a href="http://samtools.github.io/hts-specs/">SAM/BAM and VCF formats</a></li>
+<li><a href="http://biostats.usc.edu/software">Quanto</a> or <a href="http://www.bioinformatics.org/spower/">SEQPower</a> for power calcs</li>
+<li><a href="https://github.com/ssadedin/bpipe">Bpipe</a>, <a href="https://github.com/hall-lab/speedseq">SpeedSeq</a> or <a href="https://bcbio-nextgen.readthedocs.org/">bcbio</a> for pipeline/workflow generation</li>
 </ul>
+<p><a href="https://www.biostars.org/p/2909/" class="uri">https://www.biostars.org/p/2909/</a></p>
 </div>
 
 
