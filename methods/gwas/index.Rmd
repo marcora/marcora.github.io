@@ -1,0 +1,101 @@
+---
+title: "GWAS"
+author: "Edoardo “Dado” Marcora"
+date: "August 3, 2015"
+output: html_document
+---
+
+## Introduction to genome-wide association studies (GWAS)
+
+## Quality control for GWAS data
+
+- http://www.ncbi.nlm.nih.gov/pubmed/20718045
+
+- Basic QC steps for GWAS
+  - SNP exclusion
+    - Exclude SNPs with a high missing rate using `plink --geno 0.05`
+    - Exclude SNPs with a low minor allele frequency using `plink --maf 0.01`
+    - Exclude SNPs that depart from HW equilibrium
+  - Sample exclusion
+    - Exclude samples with a high missing rate using `plink --mind 0.05`
+    - Exclude samples with sex discordance using `plink --check-sex`
+    - Exclude duplicate samples and close relatives
+    - Exclude samples with high heterozigosity (e.g., contaminated samples and population outliers) using `plink --het` and plotting the inbreeding coefficient F vs samples ranked from lower to higher F
+    - Exclude population outliers or samples with ancestry discordance
+
+### Excluse SNPs that depart from HW equilibrium
+
+Generate plink.hwe file using `plink --hardy`
+
+```{r eval=FALSE}
+library(dplyr)
+library(magrittr)
+hwe = read.table("plink.hwe", header = TRUE, as.is = TRUE)
+hwe.all.p = hwe %>% filter(TEST == "ALL") %$% P # if case-control study for a binary trait, use TEST = "UNAFF"!
+x = sort(-log10(ppoints(hwe.all.p)))
+y = sort(-log10(hwe.all.p))
+plot(x, y, xlab = "expected", ylab = "observed")
+```
+
+Inspect the QQ-plot (observed vs expected P-values) and decide on which P-value threshold to use for SNP exclusion using `plink --hwe 0.00001`
+
+### Exclude duplicate samples and close relatives by finding pairs with high IBD values (e.g., Pi > 0.1)
+
+Generate plink.genome file using `plink --genome --min 0.05`
+
+For each pair of individuals:
+
+- Z0 = Pr(pair share 0 alleles IBD) 
+- Z1 = Pr(pair share 1 alleles IBD)
+- Z2 = Pr(pair share 2 alleles IBD)
+- Pi = (2 * Z2 + Z1) / 2
+
+- Parents-offspring &rarr; Z0 = 0; Z1 = 1; Z2 = 0; Pi = 0.5
+- Siblings &rarr; Z0 = 0.25; Z1 = 0.5; Z2 = 0.25; Pi = 0.5
+- Half siblings &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; Pi = 0.25
+- Avuncular &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; Pi = 0.25
+- First cousins &rarr; Z0 = 0.75; Z1 = 0.25; Z2 = 0; Pi = 0.125
+
+Inspect the Z1 vs Z0 plot to visually identify close relatives to exclude using `plink --exclude`
+
+### Correct for population structure/stratification (to avoid confouding by population structure/stratification)
+
+- Stratify on self-reported ancestry
+    - Good for large diffs between populations
+    - Not so good for small diffs within populations
+- Use genome-wide genotypes to correct for population sub-structure
+    - Principal components analysis (PCA) is commonly used
+    - PCA summarizes the variability in a dataset where each principal component is a linear combinations of the input variables, with the first component explaining the most variability, the second component (perpendicular to the first) explaining the second most, and so on.
+    
+Inspect the PC2 vs PC1 plot to visually identify population structure/sub-structure
+
+Unadjusted regression model:
+
+$$Y = \beta_G G + \epsilon$$
+
+Adjusted regression model:
+
+$$Y = \beta_G G + \beta_{PC1} PC1 + \beta_{PC2} PC2 + \beta_{PC3} PC3 + \epsilon$$
+
+Inspect the QQ-plot (observed vs expected P-values) of variant-trait associations to visually identify genomic inflation which is summarized by the genomic control lambda:
+
+$$\lambda_{GC} = median(\chi_{observed}^2)/median(\chi_{expected}^2) = median(\chi_{observed}^2)/0.4549364$$
+
+which should ideally be 1.00
+
+See also: http://www.nature.com/ejhg/journal/v19/n7/full/ejhg201139a.html
+
+### Compare MAF across different populations (e.g., EUR vs AFR)
+
+Generate plink.frq file using `plink --freq`
+
+A1 is the minor allele and A2 is the major allele. However, what those are depends on the MAF in the population and thus they can be switched in different populations! Therefore, when comparing MAF across populations, calculate MAF = 1-MAF for SNPs where the minor and major alleles are switched, so that A1 and A2 refer to the same alleles across different populations.
+
+### Correct for population structure/stratification using PCA
+
+Calculate PCs using [EIGENSOFT](http://www.hsph.harvard.edu/alkes-price/software/) and include in the phenotype file as covariates
+
+
+## Univariate association analysis
+
+XXX
