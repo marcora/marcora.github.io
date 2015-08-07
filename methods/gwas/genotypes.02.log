@@ -1,0 +1,19 @@
+PLINK v1.90b3 64-bit (11 Jan 2015)
+7 arguments: --bfile genotypes.01 --maf 0.01 --make-bed --out genotypes.02
+Hostname: huntingtin.1425mad.mssm.edu
+Working directory: /Users/marcoe02/marcora.github.io/methods/gwas
+Start time: Thu Aug  6 19:32:58 2015
+
+Random number seed: 1438903978
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+43278 variants loaded from .bim file.
+450 people (226 males, 224 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 449 founders and 1 nonfounder present.
+Calculating allele frequencies... done.
+842 variants removed due to MAF threshold(s) (--maf/--max-maf).
+42436 variants and 450 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to genotypes.02.bed + genotypes.02.bim + genotypes.02.fam ... done.
+
+End time: Thu Aug  6 19:32:58 2015

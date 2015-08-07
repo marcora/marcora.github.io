@@ -1,0 +1,100 @@
+---
+title: "Software"
+output: html_document
+---
+
+## R packages
+
+```{r eval=FALSE}
+install.packages("psych")
+install.packages("lubridate")
+install.packages("stringr")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("magrittr")
+install.packages("printr")
+install.packages("latex2exp")
+install.packages("sqldf")
+install.packages("ggplot2")
+install.packages("devtools")
+```
+
+## R packages (science)
+
+```{r eval=FALSE}
+install.packages("rsnps")
+install.packages("qqman")
+```
+
+## R packages (devtools)
+
+```{r eval=FALSE}
+library(devtools)
+install_github("hadley/bigvis")
+install_github("yihui/printr")
+# install_github("baptiste/gridextra")
+```
+
+## Bioconductor packages
+
+```{r eval=FALSE}
+source("http://bioconductor.org/biocLite.R")
+biocLite("Biostrings")
+biocLite("Biobase") # -> ExpressionSet
+biocLite("IRanges")
+biocLite("GenomicRanges") # -> SummarizedExperiment
+biocLite("ShortRead")
+biocLite("Rsamtools")
+biocLite("GenomicAlignments")
+biocLite("Rsubread")
+biocLite("rtracklayer")
+biocLite("genefilter")
+biocLite("BSgenome")
+biocLite("GenomicFeatures")
+biocLite("VariantAnnotation")
+biocLite("VariantFiltering")
+biocLite("BiocParallel")
+biocLite("GenomicFiles")
+biocLite("biomaRt")
+biocLite("AnnotationHub")
+biocLite("Homo.sapiens")
+biocLite("BSgenome.Hsapiens.UCSC.hg19")
+biocLite("Mus.musculus")
+biocLite("BSgenome.Mmusculus.UCSC.mm10")
+biocLite("WGCNA")
+biocLite("DESeq2")
+biocLite("edgeR")
+biocLite("cummeRbund")
+biocLite("affy")
+biocLite("plier")
+biocLite("oligo")
+biocLite("limma")
+biocLite("gcrma")
+biocLite("BiocStyle")
+biocLite("ReportingTools")
+biocLite("biovizBase")
+biocLite("Gviz")
+biocLite("ggbio")
+biocLite("epivizr")
+biocLite("ComplexHeatmap")
+biocLite("GEOquery")
+biocLite("ArrayExpress")
+biocLite("SRAdb")
+biocLite("GO.db")
+biocLite("KEGG.db")
+biocLite("Category")
+biocLite("GOstats")
+biocLite("GOexpress")
+biocLite("topGO")
+biocLite("sigPathway")
+biocLite("GSEABase")
+biocLite("GSEAlm")
+biocLite("PGSEA")
+biocLite("GlobalAncova")
+biocLite("categoryCompare")
+biocLite("EnrichmentBrowser")
+biocLite("npGSEA")
+biocLite("RSNPset")
+biocLite("cpvSNP")
+biocLite("RRHO")
+```

@@ -1,0 +1,451 @@
+    FID       IID       PEDSEX       SNPSEX       STATUS            F
+   2367   NA19700            1            0      PROBLEM          nan
+   2367   NA19701            2            0      PROBLEM          nan
+   2368   NA19703            1            0      PROBLEM          nan
+   2368   NA19704            2            0      PROBLEM          nan
+   2369   NA19707            2            0      PROBLEM          nan
+   2371   NA19711            1            0      PROBLEM          nan
+   2371   NA19712            2            0      PROBLEM          nan
+   2418   NA19818            1            0      PROBLEM          nan
+   2418   NA19819            2            0      PROBLEM          nan
+   2424   NA19834            1            0      PROBLEM          nan
+   2424   NA19835            2            0      PROBLEM          nan
+   2425   NA19900            1            0      PROBLEM          nan
+   2425   NA19901            2            0      PROBLEM          nan
+   2426   NA19904            1            0      PROBLEM          nan
+  2426a   NA19913            2            0      PROBLEM          nan
+   2427   NA19908            1            0      PROBLEM          nan
+   2427   NA19909            2            0      PROBLEM          nan
+   2430   NA19914            2            0      PROBLEM          nan
+   2431   NA19916            1            0      PROBLEM          nan
+   2431   NA19917            2            0      PROBLEM          nan
+   2433   NA19920            1            0      PROBLEM          nan
+   2433   NA19921            2            0      PROBLEM          nan
+   2434   NA19922            1            0      PROBLEM          nan
+   2434   NA19923            2            0      PROBLEM          nan
+   2436   NA19713            2            0      PROBLEM          nan
+   2436   NA19982            1            0      PROBLEM          nan
+  2437a   NA19984            1            0      PROBLEM          nan
+   2446   NA20126            1            0      PROBLEM          nan
+   2446   NA20127            2            0      PROBLEM          nan
+   2466   NA20276            2            0      PROBLEM          nan
+   2467   NA20278            1            0      PROBLEM          nan
+   2469   NA20282            2            0      PROBLEM          nan
+  2469a   NA20281            1            0      PROBLEM          nan
+   2470   NA20287            2            0      PROBLEM          nan
+   2471   NA20289            2            0      PROBLEM          nan
+   2472   NA20291            1            0      PROBLEM          nan
+   2474   NA20294            2            0      PROBLEM          nan
+   2475   NA20296            2            0      PROBLEM          nan
+  2476a   NA20298            1            0      PROBLEM          nan
+   2480   NA20317            2            0      PROBLEM          nan
+  2480a   NA20318            1            0      PROBLEM          nan
+   2481   NA20321            2            0      PROBLEM          nan
+  2481a   NA20320            2            0      PROBLEM          nan
+   2483   NA20332            2            0      PROBLEM          nan
+   2484   NA20334            2            0      PROBLEM          nan
+  2484a   NA20355            2            0      PROBLEM          nan
+   2486   NA20339            2            0      PROBLEM          nan
+   2487   NA20340            1            0      PROBLEM          nan
+   2488   NA20342            1            0      PROBLEM          nan
+   2490   NA20346            1            0      PROBLEM          nan
+   2491   NA20348            1            0      PROBLEM          nan
+   2493   NA20351            1            0      PROBLEM          nan
+   2494   NA20356            1            0      PROBLEM          nan
+   2494   NA20357            2            0      PROBLEM          nan
+   2495   NA20359            2            0      PROBLEM          nan
+  2495a   NA20362            1            0      PROBLEM          nan
+   2505   NA20412            2            0      PROBLEM          nan
+   BB01   HG01879            1            0      PROBLEM          nan
+   BB01   HG01880            2            0      PROBLEM          nan
+   BB02   HG01882            1            0      PROBLEM          nan
+   BB02   HG01883            2            0      PROBLEM          nan
+   BB03   HG01885            1            0      PROBLEM          nan
+   BB03   HG01956            2            0      PROBLEM          nan
+   BB04   HG01886            2            0      PROBLEM          nan
+   BB04   HG02014            1            0      PROBLEM          nan
+   BB05   HG01889            2            0      PROBLEM          nan
+   BB05   HG01890            1            0      PROBLEM          nan
+   BB06   HG01894            2            0      PROBLEM          nan
+   BB06   HG01912            1            0      PROBLEM          nan
+   BB07   HG01896            2            0      PROBLEM          nan
+   BB07   HG02013            1            0      PROBLEM          nan
+   BB08   HG01985            2            0      PROBLEM          nan
+   BB09   HG01914            1            0      PROBLEM          nan
+   BB09   HG01915            2            0      PROBLEM          nan
+   BB10   HG01958            2            0      PROBLEM          nan
+   BB10   HG01986            1            0      PROBLEM          nan
+   BB11   HG01988            1            0      PROBLEM          nan
+   BB11   HG01989            2            0      PROBLEM          nan
+   BB12   HG01990            1            0      PROBLEM          nan
+   BB12   HG02012            2            0      PROBLEM          nan
+   BB13   HG02009            1            0      PROBLEM          nan
+   BB13   HG02010            2            0      PROBLEM          nan
+   BB14   HG02051            1            0      PROBLEM          nan
+   BB14   HG02052            2            0      PROBLEM          nan
+   BB15   HG02053            1            0      PROBLEM          nan
+   BB15   HG02054            2            0      PROBLEM          nan
+   BB16   HG02095            2            0      PROBLEM          nan
+   BB16   HG02332            1            0      PROBLEM          nan
+   BB18   HG02107            1            0      PROBLEM          nan
+   BB18   HG02108            2            0      PROBLEM          nan
+   BB19   HG02111            2            0      PROBLEM          nan
+   BB20   HG02143            1            0      PROBLEM          nan
+   BB20   HG02144            2            0      PROBLEM          nan
+   BB21   HG02255            1            0      PROBLEM          nan
+   BB21   HG02256            2            0      PROBLEM          nan
+   BB22   HG02314            1            0      PROBLEM          nan
+   BB22   HG02315            2            0      PROBLEM          nan
+   BB23   HG02307            1            0      PROBLEM          nan
+   BB23   HG02308            2            0      PROBLEM          nan
+   BB24   HG02281            1            0      PROBLEM          nan
+   BB24   HG02282            2            0      PROBLEM          nan
+   BB25   HG02283            1            0      PROBLEM          nan
+   BB25   HG02309            2            0      PROBLEM          nan
+   BB26   HG02284            1            0      PROBLEM          nan
+   BB27   HG02317            1            0      PROBLEM          nan
+   BB27   HG02318            2            0      PROBLEM          nan
+   BB28   HG02322            2            0      PROBLEM          nan
+   BB29   HG02323            1            0      PROBLEM          nan
+   BB30   HG02325            2            0      PROBLEM          nan
+   BB31   HG02337            2            0      PROBLEM          nan
+   BB32   HG02334            1            0      PROBLEM          nan
+   BB33   HG02330            1            0      PROBLEM          nan
+   BB34   HG02339            2            0      PROBLEM          nan
+   BB35   HG02343            1            0      PROBLEM          nan
+   BB36   HG02419            2            0      PROBLEM          nan
+   BB37   HG02420            1            0      PROBLEM          nan
+   BB37   HG02427            2            0      PROBLEM          nan
+   BB39   HG02429            1            0      PROBLEM          nan
+   BB41   HG02433            1            0      PROBLEM          nan
+   BB42   HG02439            1            0      PROBLEM          nan
+   BB43   HG02442            1            0      PROBLEM          nan
+   BB44   HG02445            1            0      PROBLEM          nan
+   BB45   HG02489            1            0      PROBLEM          nan
+   BB46   HG02449            1            0      PROBLEM          nan
+   BB46   HG02450            2            0      PROBLEM          nan
+   BB48   HG02455            1            0      PROBLEM          nan
+   BB49   HG02470            1            0      PROBLEM          nan
+   BB49   HG02471            2            0      PROBLEM          nan
+   BB51   HG02476            2            0      PROBLEM          nan
+   BB52   HG02477            2            0      PROBLEM          nan
+   BB53   HG02479            2            0      PROBLEM          nan
+   BB54   HG02481            1            0      PROBLEM          nan
+   BB55   HG02484            1            0      PROBLEM          nan
+   BB55   HG02485            2            0      PROBLEM          nan
+   BB56   HG02511            2            0      PROBLEM          nan
+   BB57   HG02496            1            0      PROBLEM          nan
+   BB57   HG02497            2            0      PROBLEM          nan
+   BB58   HG02501            1            0      PROBLEM          nan
+   BB58   HG02502            2            0      PROBLEM          nan
+   BB59   HG02505            2            0      PROBLEM          nan
+   BB60   HG02508            2            0      PROBLEM          nan
+   BB61   HG02536            1            0      PROBLEM          nan
+   BB61   HG02537            2            0      PROBLEM          nan
+   BB63   HG02541            1            0      PROBLEM          nan
+   BB64   HG02545            1            0      PROBLEM          nan
+   BB64   HG02546            2            0      PROBLEM          nan
+   BB65   HG02549            2            0      PROBLEM          nan
+   BB67   HG02554            1            0      PROBLEM          nan
+   BB67   HG02555            2            0      PROBLEM          nan
+   BB68   HG02557            1            0      PROBLEM          nan
+   BB68   HG02558            2            0      PROBLEM          nan
+   BB69   HG02577            2            0      PROBLEM          nan
+   BB70   HG02580            2            0      PROBLEM          nan
+ GBR001   HG00155            1            0      PROBLEM          nan
+ GBR002   HG00146            2            0      PROBLEM          nan
+ GBR003   HG00158            2            0      PROBLEM          nan
+HG00096   HG00096            1            0      PROBLEM          nan
+HG00097   HG00097            2            0      PROBLEM          nan
+HG00099   HG00099            2            0      PROBLEM          nan
+HG00100   HG00100            2            0      PROBLEM          nan
+HG00101   HG00101            1            0      PROBLEM          nan
+HG00102   HG00102            2            0      PROBLEM          nan
+HG00103   HG00103            1            0      PROBLEM          nan
+HG00105   HG00105            1            0      PROBLEM          nan
+HG00106   HG00106            2            0      PROBLEM          nan
+HG00107   HG00107            1            0      PROBLEM          nan
+HG00108   HG00108            1            0      PROBLEM          nan
+HG00109   HG00109            1            0      PROBLEM          nan
+HG00110   HG00110            2            0      PROBLEM          nan
+HG00111   HG00111            2            0      PROBLEM          nan
+HG00112   HG00112            1            0      PROBLEM          nan
+HG00113   HG00113            1            0      PROBLEM          nan
+HG00114   HG00114            1            0      PROBLEM          nan
+HG00115   HG00115            1            0      PROBLEM          nan
+HG00116   HG00116            1            0      PROBLEM          nan
+HG00117   HG00117            1            0      PROBLEM          nan
+HG00118   HG00118            2            0      PROBLEM          nan
+HG00119   HG00119            1            0      PROBLEM          nan
+HG00120   HG00120            2            0      PROBLEM          nan
+HG00121   HG00121            2            0      PROBLEM          nan
+HG00122   HG00122            2            0      PROBLEM          nan
+HG00123   HG00123            2            0      PROBLEM          nan
+HG00125   HG00125            2            0      PROBLEM          nan
+HG00126   HG00126            1            0      PROBLEM          nan
+HG00127   HG00127            2            0      PROBLEM          nan
+HG00128   HG00128            2            0      PROBLEM          nan
+HG00129   HG00129            1            0      PROBLEM          nan
+HG00130   HG00130            2            0      PROBLEM          nan
+HG00131   HG00131            1            0      PROBLEM          nan
+HG00132   HG00132            2            0      PROBLEM          nan
+HG00133   HG00133            2            0      PROBLEM          nan
+HG00136   HG00136            1            0      PROBLEM          nan
+HG00137   HG00137            2            0      PROBLEM          nan
+HG00138   HG00138            1            0      PROBLEM          nan
+HG00139   HG00139            1            0      PROBLEM          nan
+HG00140   HG00140            1            0      PROBLEM          nan
+HG00141   HG00141            1            0      PROBLEM          nan
+HG00142   HG00142            1            0      PROBLEM          nan
+HG00143   HG00143            1            0      PROBLEM          nan
+HG00145   HG00145            1            0      PROBLEM          nan
+HG00148   HG00148            1            0      PROBLEM          nan
+HG00149   HG00149            1            0      PROBLEM          nan
+HG00150   HG00150            2            0      PROBLEM          nan
+HG00151   HG00151            1            0      PROBLEM          nan
+HG00154   HG00154            2            0      PROBLEM          nan
+HG00157   HG00157            1            0      PROBLEM          nan
+HG00159   HG00159            1            0      PROBLEM          nan
+HG00160   HG00160            1            0      PROBLEM          nan
+HG00231   HG00231            2            0      PROBLEM          nan
+HG00232   HG00232            2            0      PROBLEM          nan
+HG00233   HG00233            2            0      PROBLEM          nan
+HG00234   HG00234            1            0      PROBLEM          nan
+HG00235   HG00235            2            0      PROBLEM          nan
+HG00236   HG00236            2            0      PROBLEM          nan
+HG00237   HG00237            2            0      PROBLEM          nan
+HG00238   HG00238            2            0      PROBLEM          nan
+HG00239   HG00239            2            0      PROBLEM          nan
+HG00240   HG00240            2            0      PROBLEM          nan
+HG00242   HG00242            1            0      PROBLEM          nan
+HG00243   HG00243            1            0      PROBLEM          nan
+HG00244   HG00244            1            0      PROBLEM          nan
+HG00245   HG00245            2            0      PROBLEM          nan
+HG00246   HG00246            1            0      PROBLEM          nan
+HG00250   HG00250            2            0      PROBLEM          nan
+HG00251   HG00251            1            0      PROBLEM          nan
+HG00252   HG00252            1            0      PROBLEM          nan
+HG00253   HG00253            2            0      PROBLEM          nan
+HG00254   HG00254            2            0      PROBLEM          nan
+HG00255   HG00255            2            0      PROBLEM          nan
+HG00256   HG00256            1            0      PROBLEM          nan
+HG00257   HG00257            2            0      PROBLEM          nan
+HG00258   HG00258            2            0      PROBLEM          nan
+HG00259   HG00259            2            0      PROBLEM          nan
+HG00260   HG00260            1            0      PROBLEM          nan
+HG00261   HG00261            2            0      PROBLEM          nan
+HG00262   HG00262            2            0      PROBLEM          nan
+HG00263   HG00263            2            0      PROBLEM          nan
+HG00264   HG00264            1            0      PROBLEM          nan
+HG00265   HG00265            1            0      PROBLEM          nan
+HG01334   HG01334            1            0      PROBLEM          nan
+HG01789   HG01789            1            0      PROBLEM          nan
+HG01790   HG01790            2            0      PROBLEM          nan
+HG01791   HG01791            1            0      PROBLEM          nan
+HG02215   HG02215            2            0      PROBLEM          nan
+ IBS001   HG01500            1            0      PROBLEM          nan
+ IBS001   HG01501            2            0      PROBLEM          nan
+ IBS002   HG01503            1            0      PROBLEM          nan
+ IBS002   HG01504            2            0      PROBLEM          nan
+ IBS003   HG01506            1            0      PROBLEM          nan
+ IBS003   HG01507            2            0      PROBLEM          nan
+ IBS004   HG01509            1            0      PROBLEM          nan
+ IBS004   HG01510            2            0      PROBLEM          nan
+ IBS005   HG01512            1            0      PROBLEM          nan
+ IBS005   HG01513            2            0      PROBLEM          nan
+ IBS006   HG01515            1            0      PROBLEM          nan
+ IBS006   HG01516            2            0      PROBLEM          nan
+ IBS007   HG01518            1            0      PROBLEM          nan
+ IBS007   HG01519            2            0      PROBLEM          nan
+ IBS008   HG01521            1            0      PROBLEM          nan
+ IBS008   HG01522            2            0      PROBLEM          nan
+ IBS009   HG01524            1            0      PROBLEM          nan
+ IBS009   HG01525            2            0      PROBLEM          nan
+ IBS010   HG01527            1            0      PROBLEM          nan
+ IBS010   HG01528            2            0      PROBLEM          nan
+ IBS011   HG01530            1            0      PROBLEM          nan
+ IBS011   HG01531            2            0      PROBLEM          nan
+ IBS013   HG01536            1            0      PROBLEM          nan
+ IBS013   HG01537            2            0      PROBLEM          nan
+ IBS014   HG01631            1            0      PROBLEM          nan
+ IBS014   HG01632            2            0      PROBLEM          nan
+ IBS015   HG01628            2            0      PROBLEM          nan
+ IBS015   HG01630            1            0      PROBLEM          nan
+ IBS016   HG01625            1            0      PROBLEM          nan
+ IBS016   HG01626            2            0      PROBLEM          nan
+ IBS017   HG01623            2            0      PROBLEM          nan
+ IBS017   HG01624            1            0      PROBLEM          nan
+ IBS018   HG01619            1            0      PROBLEM          nan
+ IBS018   HG01620            2            0      PROBLEM          nan
+ IBS019   HG01617            1            0      PROBLEM          nan
+ IBS019   HG01618            2            0      PROBLEM          nan
+ IBS020   HG01613            2            0      PROBLEM          nan
+ IBS020   HG01615            1            0      PROBLEM          nan
+ IBS021   HG01610            1            0      PROBLEM          nan
+ IBS021   HG01612            2            0      PROBLEM          nan
+ IBS022   HG01607            2            0      PROBLEM          nan
+ IBS022   HG01608            1            0      PROBLEM          nan
+ IBS023   HG01605            2            0      PROBLEM          nan
+ IBS023   HG01606            1            0      PROBLEM          nan
+ IBS024   HG01602            2            0      PROBLEM          nan
+ IBS024   HG01603            1            0      PROBLEM          nan
+ IBS025   HG01668            2            0      PROBLEM          nan
+ IBS025   HG01669            1            0      PROBLEM          nan
+ IBS026   HG01670            2            0      PROBLEM          nan
+ IBS026   HG01672            1            0      PROBLEM          nan
+ IBS027   HG01673            2            0      PROBLEM          nan
+ IBS027   HG01675            1            0      PROBLEM          nan
+ IBS028   HG01676            2            0      PROBLEM          nan
+ IBS028   HG01678            1            0      PROBLEM          nan
+ IBS029   HG01679            2            0      PROBLEM          nan
+ IBS029   HG01680            1            0      PROBLEM          nan
+ IBS030   HG01682            1            0      PROBLEM          nan
+ IBS030   HG01684            2            0      PROBLEM          nan
+ IBS031   HG01685            2            0      PROBLEM          nan
+ IBS031   HG01686            1            0      PROBLEM          nan
+ IBS034   HG01694            1            0      PROBLEM          nan
+ IBS034   HG01695            2            0      PROBLEM          nan
+ IBS035   HG01697            2            0      PROBLEM          nan
+ IBS035   HG01699            1            0      PROBLEM          nan
+ IBS036   HG01700            1            0      PROBLEM          nan
+ IBS036   HG01702            2            0      PROBLEM          nan
+ IBS037   HG01704            2            0      PROBLEM          nan
+ IBS037   HG01705            1            0      PROBLEM          nan
+ IBS038   HG01707            2            0      PROBLEM          nan
+ IBS038   HG01708            1            0      PROBLEM          nan
+ IBS039   HG01709            1            0      PROBLEM          nan
+ IBS039   HG01710            2            0      PROBLEM          nan
+ IBS041   HG01746            2            0      PROBLEM          nan
+ IBS041   HG01747            1            0      PROBLEM          nan
+ IBS044   HG01756            1            0      PROBLEM          nan
+ IBS044   HG01757            2            0      PROBLEM          nan
+ IBS046   HG01761            1            0      PROBLEM          nan
+ IBS046   HG01762            2            0      PROBLEM          nan
+ IBS047   HG01765            1            0      PROBLEM          nan
+ IBS047   HG01766            2            0      PROBLEM          nan
+ IBS048   HG01767            1            0      PROBLEM          nan
+ IBS048   HG01768            2            0      PROBLEM          nan
+ IBS049   HG01770            2            0      PROBLEM          nan
+ IBS049   HG01771            1            0      PROBLEM          nan
+ IBS050   HG01773            2            0      PROBLEM          nan
+ IBS050   HG01775            1            0      PROBLEM          nan
+ IBS051   HG01776            2            0      PROBLEM          nan
+ IBS051   HG01777            1            0      PROBLEM          nan
+ IBS052   HG01779            2            0      PROBLEM          nan
+ IBS052   HG01781            1            0      PROBLEM          nan
+ IBS053   HG01783            1            0      PROBLEM          nan
+ IBS053   HG01784            2            0      PROBLEM          nan
+ IBS054   HG01785            1            0      PROBLEM          nan
+ IBS054   HG01786            2            0      PROBLEM          nan
+ IBS055   HG02219            1            0      PROBLEM          nan
+ IBS056   HG02220            2            0      PROBLEM          nan
+ IBS056   HG02221            1            0      PROBLEM          nan
+ IBS057   HG02223            2            0      PROBLEM          nan
+ IBS057   HG02224            1            0      PROBLEM          nan
+ IBS059   HG02230            2            0      PROBLEM          nan
+ IBS059   HG02231            1            0      PROBLEM          nan
+ IBS060   HG02232            2            0      PROBLEM          nan
+ IBS060   HG02233            1            0      PROBLEM          nan
+ IBS061   HG02235            2            0      PROBLEM          nan
+ IBS061   HG02236            1            0      PROBLEM          nan
+ IBS062   HG02238            1            0      PROBLEM          nan
+ IBS062   HG02239            2            0      PROBLEM          nan
+   NG06   HG02922            2            0      PROBLEM          nan
+   NG06   HG02923            1            0      PROBLEM          nan
+   NG11   HG02938            1            0      PROBLEM          nan
+   NG12   HG02941            1            0      PROBLEM          nan
+   NG13   HG02943            2            0      PROBLEM          nan
+   NG13   HG02944            1            0      PROBLEM          nan
+   NG14   HG02946            2            0      PROBLEM          nan
+   NG14   HG02947            1            0      PROBLEM          nan
+   NG16   HG02952            2            0      PROBLEM          nan
+   NG16   HG02953            1            0      PROBLEM          nan
+   NG21   HG02968            1            0      PROBLEM          nan
+   NG22   HG02970            2            0      PROBLEM          nan
+   NG22   HG02971            1            0      PROBLEM          nan
+   NG23   HG02973            1            0      PROBLEM          nan
+   NG23   HG02974            2            0      PROBLEM          nan
+   NG24   HG02976            2            0      PROBLEM          nan
+   NG24   HG02977            1            0      PROBLEM          nan
+   NG25   HG02979            2            0      PROBLEM          nan
+   NG25   HG02981            1            0      PROBLEM          nan
+   NG26   HG03099            2            0      PROBLEM          nan
+   NG26   HG03100            1            0      PROBLEM          nan
+   NG27   HG03103            1            0      PROBLEM          nan
+   NG28   HG03105            2            0      PROBLEM          nan
+   NG29   HG03108            2            0      PROBLEM          nan
+   NG29   HG03109            1            0      PROBLEM          nan
+   NG30   HG03111            2            0      PROBLEM          nan
+   NG30   HG03112            1            0      PROBLEM          nan
+   NG31   HG03114            2            0      PROBLEM          nan
+   NG31   HG03115            1            0      PROBLEM          nan
+   NG32   HG03117            2            0      PROBLEM          nan
+   NG32   HG03118            1            0      PROBLEM          nan
+   NG33   HG03120            1            0      PROBLEM          nan
+   NG33   HG03121            2            0      PROBLEM          nan
+   NG34   HG03123            2            0      PROBLEM          nan
+   NG34   HG03124            1            0      PROBLEM          nan
+   NG35   HG03126            2            0      PROBLEM          nan
+   NG35   HG03127            1            0      PROBLEM          nan
+   NG36   HG03129            2            0      PROBLEM          nan
+   NG36   HG03130            1            0      PROBLEM          nan
+   NG37   HG03132            2            0      PROBLEM          nan
+   NG37   HG03133            1            0      PROBLEM          nan
+   NG38   HG03135            2            0      PROBLEM          nan
+   NG38   HG03136            1            0      PROBLEM          nan
+   NG39   HG03139            1            0      PROBLEM          nan
+   NG45   HG03157            1            0      PROBLEM          nan
+   NG46   HG03159            2            0      PROBLEM          nan
+   NG46   HG03160            1            0      PROBLEM          nan
+   NG47   HG03162            2            0      PROBLEM          nan
+   NG47   HG03163            1            0      PROBLEM          nan
+   NG48   HG03166            1            0      PROBLEM          nan
+   NG49   HG03168            2            0      PROBLEM          nan
+   NG49   HG03169            1            0      PROBLEM          nan
+   NG50   HG03172            1            0      PROBLEM          nan
+   NG51   HG03175            1            0      PROBLEM          nan
+   NG56   HG03189            2            0      PROBLEM          nan
+   NG56   HG03190            1            0      PROBLEM          nan
+   NG57   HG03193            1            0      PROBLEM          nan
+   NG58   HG03195            2            0      PROBLEM          nan
+   NG58   HG03196            1            0      PROBLEM          nan
+   NG59   HG03198            2            0      PROBLEM          nan
+   NG59   HG03199            1            0      PROBLEM          nan
+   NG60   HG03202            1            0      PROBLEM          nan
+   NG63   HG03265            1            0      PROBLEM          nan
+   NG64   HG03267            2            0      PROBLEM          nan
+   NG64   HG03268            1            0      PROBLEM          nan
+   NG65   HG03270            2            0      PROBLEM          nan
+   NG65   HG03271            1            0      PROBLEM          nan
+   NG68   HG03279            2            0      PROBLEM          nan
+   NG68   HG03280            1            0      PROBLEM          nan
+   NG72   HG03291            2            0      PROBLEM          nan
+   NG73   HG03294            2            0      PROBLEM          nan
+   NG73   HG03295            1            0      PROBLEM          nan
+   NG74   HG03297            2            0      PROBLEM          nan
+   NG74   HG03298            1            0      PROBLEM          nan
+   NG75   HG03300            2            0      PROBLEM          nan
+   NG75   HG03301            1            0      PROBLEM          nan
+   NG76   HG03303            2            0      PROBLEM          nan
+   NG76   HG03304            1            0      PROBLEM          nan
+   NG78   HG03311            1            0      PROBLEM          nan
+   NG79   HG03313            1            0      PROBLEM          nan
+   NG89   HG03342            2            0      PROBLEM          nan
+   NG89   HG03343            1            0      PROBLEM          nan
+   NG92   HG03351            2            0      PROBLEM          nan
+   NG92   HG03352            1            0      PROBLEM          nan
+   NG93   HG03354            2            0      PROBLEM          nan
+   NG96   HG03363            2            0      PROBLEM          nan
+   NG97   HG03366            2            0      PROBLEM          nan
+   NG97   HG03367            1            0      PROBLEM          nan
+   NG98   HG03369            2            0      PROBLEM          nan
+   NG98   HG03370            1            0      PROBLEM          nan
+   NG99   HG03372            2            0      PROBLEM          nan
+  NG102   HG03499            2            0      PROBLEM          nan
+  NG106   HG03511            2            0      PROBLEM          nan
+  NG107   HG03514            2            0      PROBLEM          nan
+  NG107   HG03515            1            0      PROBLEM          nan
+  NG108   HG03517            2            0      PROBLEM          nan
+  NG108   HG03518            1            0      PROBLEM          nan
+  NG109   HG03520            2            0      PROBLEM          nan
+  NG109   HG03521            1            0      PROBLEM          nan

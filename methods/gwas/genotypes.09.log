@@ -1,0 +1,20 @@
+PLINK v1.90b3 64-bit (11 Jan 2015)
+7 arguments: --bfile genotypes.07 --make-bed --out genotypes.09 --remove samples_to_exclude.txt
+Hostname: huntingtin.1425mad.mssm.edu
+Working directory: /Users/marcoe02/marcora.github.io/methods/gwas
+Start time: Thu Aug  6 19:34:39 2015
+
+Random number seed: 1438904079
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+42435 variants loaded from .bim file.
+450 people (226 males, 224 females) loaded from .fam.
+--remove: 444 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 443 founders and 1 nonfounder present.
+Calculating allele frequencies... done.
+Total genotyping rate in remaining samples is 0.99988.
+42435 variants and 444 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to genotypes.09.bed + genotypes.09.bim + genotypes.09.fam ... done.
+
+End time: Thu Aug  6 19:34:39 2015

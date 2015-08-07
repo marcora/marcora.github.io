@@ -1,0 +1,48 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Web-based version check ( --noweb to skip )
+Recent cached web-check found... OK, v1.07 is current
+
++++ PLINK 1.9 is now available! See above website for details +++ 
+
+Writing this text to log file [ genotypes.06.log ]
+Analysis started: Thu Aug  6 19:33:56 2015
+
+Options in effect:
+	--bfile genotypes.05
+	--check-sex
+	--out genotypes.06
+
+** For gPLINK compatibility, do not use '.' in --out **
+Reading map (extended format) from [ genotypes.05.bim ] 
+42435 markers to be included from [ genotypes.05.bim ]
+Reading pedigree information from [ genotypes.05.fam ] 
+450 individuals read from [ genotypes.05.fam ] 
+0 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+0 cases, 0 controls and 450 missing
+226 males, 224 females, and 0 of unspecified sex
+Reading genotype bitfile from [ genotypes.05.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Before frequency and genotyping pruning, there are 42435 SNPs
+449 founders and 1 non-founders found
+Total genotyping rate in remaining individuals is 0.999879
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 42435 SNPs
+After filtering, 0 cases, 0 controls and 450 missing
+After filtering, 226 males, 224 females, and 0 of unspecified sex
+Converting data to Individual-major format
+Writing X-chromosome sex check results to [ genotypes.06.sexcheck ] 
+
+Analysis finished: Thu Aug  6 19:33:57 2015
+

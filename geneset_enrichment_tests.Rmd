@@ -1,0 +1,92 @@
+---
+title: "Geneset enrichment tests"
+author: "Edoardo “Dado” Marcora"
+date: "July 28, 2015"
+output: html_document
+---
+
+Adapted from http://pedagogix-tagc.univ-mrs.fr/courses/statistics_bioinformatics/ [http://pedagogix-tagc.univ-mrs.fr/courses/ASG1/]
+
+# Hypergeometric test
+
+The classical example for the hypergeometric distribution is the random selection of "k" balls in an urn containing "m" marked and "n" non-marked balls, and the observation that the selection contains "x" marked balls.
+
+- m = number of marked balls in the urn
+- N = number of balls in the urn
+- n = N - m = number of non-marked balls in the urn
+- k = size of the random selection
+- x = number of marked balls in the random selection
+
+- m = number of genes in geneset [e.g., number of genes annotated with EFFEROCYTOSIS, a term in GOTERM_BP_FAT]
+- N = number of genes in genespace/background, e.g., number of genes in genome (or expressed genes if list of DEGs) [annotated with at least one term in GOTERM_BP_FAT]
+- n = N - m
+- k = number of genes in genelist [annotated with at least one term in GOTERM_BP_FAT]
+- x = number of genes in overlap/intersection between genelist AND geneset [e.g., number of genes in genelist annotated with EFFEROCYTOSIS]
+
+```{r}
+k = genelist = 400
+m = geneset = 40
+N = genespace = 4000
+n = N - m
+x = 10
+
+# x can neither be higher than k or m
+x.range <- 0:min(k, m)
+
+## probability density function (PDF) of hypergeometric distribution P(X=x)
+dens = dhyper(x = x.range, m = m, n = n, k = k)
+
+plot(x.range, dens, type = "h", lwd = 2, col = "blue", main = "Hypergeometric distribution (PDF)", xlab = "x = # of marked balls in a random selection of size k", ylab = "density = P(X=x)", ylim = c(0, max(dens)))
+
+abline(v = x, col = "red", lty = 2)
+```
+
+The P-value is the probability of observing at least "x" marked balls in a random selection of size "k", and it can be calculated as follows:
+
+```{r}
+phyper(q = x-1, m = m, n = n, k = k, lower.tail = FALSE)
+```
+
+Please note that:
+
+1. By default, the R function phyper computes the inclusive lower tail of the distribution: P(X≤x).
+2. With the option "lower.tail=FALSE", phyper() returns the exclusive upper tail P(X>x).
+3. We want the inclusive upper tail: P-value = P(X≥x). For this, we can compute the exclusive upper tail of the value just below x. Indeed, since the distribution is discrete, P(X≥x) = P(X>x-1).
+
+# Fisher's exact test
+
+```{r}
+# Prepare 2x2 contingency table
+
+contingency.table = data.frame(matrix(nrow = 2, ncol = 2))
+rownames(contingency.table) = c("in.geneset", "not.in.geneset")
+colnames(contingency.table) = c("in.genelist", "not.in.genelist")
+
+contingency.table["in.geneset", "in.genelist"] = x
+contingency.table["not.in.geneset", "in.genelist"] = k-x
+contingency.table["in.geneset", "not.in.genelist"] = m-x
+contingency.table["not.in.geneset", "not.in.genelist"] = n-(k-x)
+
+contingency.table
+
+contingency.table.with.margins = cbind(contingency.table, apply(contingency.table, 1, sum))
+contingency.table.with.margins = rbind(contingency.table.with.margins, apply(contingency.table.with.margins, 2, sum))
+
+colnames(contingency.table.with.margins) = c(colnames(contingency.table), "total")
+rownames(contingency.table.with.margins) = c(rownames(contingency.table), "total")
+
+contingency.table.with.margins
+
+sum(contingency.table) # should be equal to N
+
+N
+```
+
+The P-value can be calculated as follows:
+
+```{r}
+# contingency.table = matrix(c(x, k-x, m-x, n-(k-x)), nrow = 2, ncol = 2)
+ftest = fisher.test(x = contingency.table, alternative = "greater")
+ftest
+ftest$p.value
+```

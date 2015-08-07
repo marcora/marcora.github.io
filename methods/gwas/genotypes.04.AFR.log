@@ -1,0 +1,21 @@
+PLINK v1.90b3 64-bit (11 Jan 2015)
+12 arguments: --bfile genotypes.02 --filter phenotypes.txt AFR --hwe 0.00001 --make-bed --mfilter 6 --out genotypes.04.AFR
+Hostname: huntingtin.1425mad.mssm.edu
+Working directory: /Users/marcoe02/marcora.github.io/methods/gwas
+Start time: Thu Aug  6 19:33:31 2015
+
+Random number seed: 1438904011
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+42436 variants loaded from .bim file.
+450 people (226 males, 224 females) loaded from .fam.
+--filter: 252 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 252 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+--hwe: 7 variants removed due to Hardy-Weinberg exact test.
+42429 variants and 252 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to genotypes.04.AFR.bed + genotypes.04.AFR.bim +
+genotypes.04.AFR.fam ... done.
+
+End time: Thu Aug  6 19:33:31 2015

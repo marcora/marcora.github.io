@@ -1,0 +1,22 @@
+PLINK v1.90b3 64-bit (11 Jan 2015)
+16 arguments: --bfile genotypes.11 --ci 0.95 --covar phenotypes.txt --covar-name Gender,PC1-PC3 --hide-covar --linear --out genotypes.14 --pheno phenotypes.txt --pheno-name Y1
+Hostname: huntingtin.1425mad.mssm.edu
+Working directory: /Users/marcoe02/marcora.github.io/methods/gwas
+Start time: Thu Aug  6 19:35:46 2015
+
+Note: --hide-covar flag deprecated.  Use e.g. '--linear hide-covar'.
+Random number seed: 1438904146
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+42435 variants loaded from .bim file.
+444 people (223 males, 221 females) loaded from .fam.
+444 phenotype values present after --pheno.
+Using 1 thread (no multithreaded calculations invoked).
+--covar: 4 out of 16 covariates loaded.
+Before main variant filters, 443 founders and 1 nonfounder present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.99988.
+42435 variants and 444 people pass filters and QC.
+Phenotype data is quantitative.
+Writing linear model association results to genotypes.14.assoc.linear ... done.
+
+End time: Thu Aug  6 19:35:48 2015

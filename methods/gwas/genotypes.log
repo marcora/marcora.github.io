@@ -1,0 +1,22 @@
+PLINK v1.90b3 64-bit (11 Jan 2015)
+5 arguments: --file genotypes --make-bed --out genotypes
+Hostname: huntingtin.1425mad.mssm.edu
+Working directory: /Users/marcoe02/marcora.github.io/methods/gwas
+Start time: Thu Aug  6 19:32:40 2015
+
+Random number seed: 1438903960
+16384 MB RAM detected; reserving 8192 MB for main workspace.
+Scanning .ped file... done.
+Performing single-pass .bed write (43278 variants, 450 people).
+--file: genotypes-temporary.bed + genotypes-temporary.bim +
+genotypes-temporary.fam written.
+43278 variants loaded from .bim file.
+450 people (226 males, 224 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 449 founders and 1 nonfounder present.
+Calculating allele frequencies... done.
+43278 variants and 450 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to genotypes.bed + genotypes.bim + genotypes.fam ... done.
+
+End time: Thu Aug  6 19:32:41 2015

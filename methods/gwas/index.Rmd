@@ -1,79 +1,338 @@
 ---
-title: "GWAS"
+title: "Genome-wide association studies"
 author: "Edoardo “Dado” Marcora"
 date: "August 3, 2015"
 output: html_document
 ---
 
-## Introduction to genome-wide association studies (GWAS)
-
-## Quality control for GWAS data
-
-- http://www.ncbi.nlm.nih.gov/pubmed/20718045
-
-- Basic QC steps for GWAS
-  - SNP exclusion
-    - Exclude SNPs with a high missing rate using `plink --geno 0.05`
-    - Exclude SNPs with a low minor allele frequency using `plink --maf 0.01`
-    - Exclude SNPs that depart from HW equilibrium
-  - Sample exclusion
-    - Exclude samples with a high missing rate using `plink --mind 0.05`
-    - Exclude samples with sex discordance using `plink --check-sex`
-    - Exclude duplicate samples and close relatives
-    - Exclude samples with high heterozigosity (e.g., contaminated samples and population outliers) using `plink --het` and plotting the inbreeding coefficient F vs samples ranked from lower to higher F
-    - Exclude population outliers or samples with ancestry discordance
-
-### Excluse SNPs that depart from HW equilibrium
-
-Generate plink.hwe file using `plink --hardy`
-
-```{r eval=FALSE}
+```{r echo=FALSE, message=FALSE}
 library(dplyr)
 library(magrittr)
-hwe = read.table("plink.hwe", header = TRUE, as.is = TRUE)
-hwe.all.p = hwe %>% filter(TEST == "ALL") %$% P # if case-control study for a binary trait, use TEST = "UNAFF"!
-x = sort(-log10(ppoints(hwe.all.p)))
-y = sort(-log10(hwe.all.p))
-plot(x, y, xlab = "expected", ylab = "observed")
+library(latex2exp)
+library(qqman)
 ```
 
-Inspect the QQ-plot (observed vs expected P-values) and decide on which P-value threshold to use for SNP exclusion using `plink --hwe 0.00001`
+## Introduction to genome-wide association studies (GWAS)
 
-### Exclude duplicate samples and close relatives by finding pairs with high IBD values (e.g., Pi > 0.1)
+### PLINK files
 
-Generate plink.genome file using `plink --genome --min 0.05`
+- https://www.cog-genomics.org/plink2/
 
-For each pair of individuals:
+#### Genotypes MAP file
 
-- Z0 = Pr(pair share 0 alleles IBD) 
-- Z1 = Pr(pair share 1 alleles IBD)
-- Z2 = Pr(pair share 2 alleles IBD)
-- Pi = (2 * Z2 + Z1) / 2
+```{r}
+head(read.table("genotypes.map", header = FALSE, as.is = TRUE))
+```
 
-- Parents-offspring &rarr; Z0 = 0; Z1 = 1; Z2 = 0; Pi = 0.5
-- Siblings &rarr; Z0 = 0.25; Z1 = 0.5; Z2 = 0.25; Pi = 0.5
-- Half siblings &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; Pi = 0.25
-- Avuncular &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; Pi = 0.25
-- First cousins &rarr; Z0 = 0.75; Z1 = 0.25; Z2 = 0; Pi = 0.125
+Rows are SNPs
 
-Inspect the Z1 vs Z0 plot to visually identify close relatives to exclude using `plink --exclude`
+- V1 = Chromosome code
+- V2 = Variant ID
+- V3 = Position in cM
+- V4 = Position in bp
 
-### Correct for population structure/stratification (to avoid confouding by population structure/stratification)
+#### Genotypes PED file
 
-- Stratify on self-reported ancestry
+```{r}
+head(read.table(pipe('cut -d " " -f 1-10 genotypes.ped'), header = FALSE, as.is = TRUE))
+```
+
+Rows are samples
+
+- V1 = Family ID (FID)
+- V2 = Within-family/Individual ID (IID)
+- V3 = Mother ID (0 if not available)
+- V4 = Father ID (0 if not available)
+- V5 = Sex code (1 = male, 2 = female, 0 = unknown)
+- V6 = Phenotype code (1 = affected, 2 = unaffected, -9 if not applicable or not available)
+- V7-8 = Genotype of first SNP
+- V9-10 = Genotype of second SNP
+- ...
+
+#### Phenotypes (and covariates) TXT file
+
+```{r}
+phenotypes = read.table("phenotypes.txt", header = TRUE, as.is = TRUE)
+str(phenotypes)
+```
+
+
+#### Convert genotypes files to binary format (BED, BIM and FAM files)
+
+```{r engine='sh', eval=FALSE}
+plink2 --file genotypes --make-bed --out genotypes
+```
+
+
+## GWAS data cleaning
+
+- http://www.ncbi.nlm.nih.gov/pubmed/20718045
+- http://www.ncbi.nlm.nih.gov/pubmed/23652425
+- http://www.ncbi.nlm.nih.gov/pubmed/21085122
+- http://www.bioconductor.org/packages/release/bioc/vignettes/GWASTools/inst/doc/DataCleaning.pdf
+- http://www.h3abionet.org/component/attachments/download/285
+
+- SNP exclusion
+    - Exclude SNPs with a high missing rate
+    - Exclude SNPs with a low minor allele frequency
+    - Exclude SNPs that depart from [Hardy-Weinberg equilibrium](https://en.wikipedia.org/wiki/Hardy%E2%80%93Weinberg_principle)
+- Sample exclusion
+    - Exclude samples with a high missing rate
+    - Exclude samples with sex discordance (e.g., due to sample swap or contamination):
+    - Exclude duplicate samples and first-degree relatives
+    - Exclude samples with high heterozigosity (e.g., due to sample contamination or population outliers)
+    - Exclude population outliers or samples with ancestry discordance
+
+
+### Exclude SNPs with a high missing rate
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes --geno 0.05 --make-bed --out genotypes.01
+```
+
+
+### Exclude SNPs with a low minor allele frequency
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.01 --maf 0.01 --make-bed --out genotypes.02
+```
+
+
+### Exclude SNPs that depart from Hardy-Weinberg equilibrium
+
+Calculate statistics for HWE fit:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.02 --hardy --out genotypes.03
+```
+
+```{r}
+genotypes.03.hwe = read.table("genotypes.03.hwe", header = TRUE, check.names = FALSE, as.is = TRUE)
+head(genotypes.03.hwe)
+```
+
+For each SNP:
+
+- CHR = Chromosome code
+- SNP = Variant ID
+- TEST = Type of test (ALL|AFF|UNAFF|ALL(QT)|ALL(NP))
+- A1 = Allele 1 (usually minor)
+- A2 = Allele 2 (usually major)
+- GENO = genotypes count (A1 hom/het/A2 hom)
+- O(HET) = Observed heterozygote frequency
+- E(HET) = Expected heterozygote frequency
+- P	= Hardy-Weinberg equilibrium exact test P-value
+
+Generate and inspect the QQ-plot of observed vs expected (i.e., uniform under the null) P-values and decide which P-value threshold to use for SNP exclusion:
+
+```{r}
+qq(genotypes.03.hwe$P, main = "EUR + AFR")
+```
+
+The QQ-plot reveals a major departure from HWE which, in this case, is due to the fact that the sample dataset contains both EUR and AFR ancestry individuals.
+
+Split the dataset into EUR and AFR ancestry subsets, re-calculate HWE stats for each subset separately and re-plot:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.02 --filter phenotypes.txt EUR --mfilter 6 --hardy --out genotypes.03.EUR
+plink2 --bfile genotypes.02 --filter phenotypes.txt AFR --mfilter 6 --hardy --out genotypes.03.AFR
+```
+
+```{r}
+par(mfrow = c(1,2))
+
+genotypes.03.EUR.hwe = read.table("genotypes.03.EUR.hwe", header = TRUE, check.names = FALSE, as.is = TRUE)
+qq(genotypes.03.EUR.hwe$P, main = "EUR")
+
+genotypes.03.AFR.hwe = read.table("genotypes.03.AFR.hwe", header = TRUE, check.names = FALSE, as.is = TRUE)
+qq(genotypes.03.AFR.hwe$P, main = "AFR")
+
+par(mfrow = c(1,1))
+```
+
+The QQ-plots reveal that SNPs with P-values &le; 10e-5 depart from HWE. Use this P-value threshold for SNP exclusion in each subset separately and merge the two subsets:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.02 --filter phenotypes.txt EUR --mfilter 6 --hwe 0.00001 --make-bed --out genotypes.04.EUR
+plink2 --bfile genotypes.02 --filter phenotypes.txt AFR --mfilter 6 --hwe 0.00001 --make-bed --out genotypes.04.AFR
+
+plink2 --bfile genotypes.04.EUR --bmerge genotypes.04.AFR --make-bed --out genotypes.04
+```
+
+
+### Exclude samples with a high missing rate
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.04 --mind 0.05 --make-bed --out genotypes.05
+```
+
+
+### Exclude samples with sex discordance
+
+Calculate statistics to identify sex-discordant samples (e.g., due to sample swap or contamination) for sample exclusion:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.05 --check-sex --out genotypes.06
+```
+
+```{r}
+genotypes.06.sexcheck = read.table("genotypes.06.sexcheck", header = TRUE, check.names = FALSE, as.is = TRUE)
+head(genotypes.06.sexcheck)
+```
+
+For each sample:
+
+- FID	= Family ID
+- IID	= Within-family/Individual ID
+- PEDSEX = Sex code in input file
+- SNPSEX = Imputed sex code (1 = male, 2 = female, 0 = unknown)
+- STATUS = OK if PEDSEX and SNPSEX match and are nonzero, PROBLEM otherwise
+- F = Inbreeding coefficient, considering only X chromosome
+- YCOUNT = Number of nonmissing genotype calls on Y chromosome (optional)
+
+$$F = 1 - O/E$$
+
+O = Observed # of heterozygous SNPs on the X chromosome
+
+E = Expected # of heterozygous SNPs on the X chromosome assuming HWE
+
+Accounting for sampling noise, sample is male if F > 0.8 (theoretically it should be 1 because O = 0) and female if F < 0.2 (theoretically it should be 0 because 0 = 1).
+
+Note that the sample dataset contains only chromosome 22 SNPs and therefore statistics for sex discordance cannot be calculated!
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.05 --make-bed --out genotypes.07
+```
+
+If sex discordant samples are identified, add `--remove samples_to_exclude.txt` to remove them.
+
+
+### Exclude duplicate samples and first-degree relatives
+
+Exclude duplicate samples and close relatives by finding pairs of samples with high (> 0.1) IBS/IBD PI_HAT values.
+
+Calculate IBS/IBD statistics for each pair of samples and output them if PI_HAT > 0.05:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.07 --genome --min 0.05 --out genotypes.08
+```
+
+These calculations are NOT LD-sensitive and therefore is usually a good idea to perform some form of LD-based pruning before invoking them!
+
+```{r}
+genotypes.08.genome = read.table("genotypes.08.genome", header = TRUE, check.names = FALSE, as.is = TRUE)
+head(genotypes.08.genome)
+```
+
+For each pair of samples:
+
+- FID1 = Family ID for first sample
+- IID1 = Within-family/Individual ID for first sample
+- FID2 = Family ID for second sample
+- IID2 = Within-family/Individual ID for second sample
+- RT = Relationship type inferred from .fam/.ped file
+- EZ = IBD sharing expected value, based on just .fam/.ped relationship
+- Z0 = P(IBD=0) = P(pair share 0 alleles IBD)
+- Z1 = P(IBD=1) = P(pair share 1 alleles IBD)
+- Z2 = P(IBD=2) = P(pair share 2 alleles IBD)
+- PI_HAT = Proportion IBD, i.e. P(IBD=2) + 0.5*P(IBD=1)
+- PHE = Pairwise phenotypic code (1, 0, -1 = AA, AU, and UU pairs, respectively)
+- DST = IBS distance, i.e. (IBS2 + 0.5*IBS1) / (IBS0 + IBS1 + IBS2)
+- PPC = IBS binomial test
+- RATIO	= HETHET:IBS0 SNP ratio (expected value 2)
+
+- Parents-offspring &rarr; Z0 = 0; Z1 = 1; Z2 = 0; PI_HAT = 0.5
+- Siblings &rarr; Z0 = 0.25; Z1 = 0.5; Z2 = 0.25; PI_HAT = 0.5
+- Half siblings &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; PI_HAT = 0.25
+- Avuncular &rarr; Z0 = 0.5; Z1 = 0.5; Z2 = 0; PI_HAT = 0.25
+- First cousins &rarr; Z0 = 0.75; Z1 = 0.25; Z2 = 0; PI_HAT = 0.125
+
+Generate and inspect the Z1 vs Z0 plot to visually identify duplicate samples and first-degree relatives for sample exclusion:
+
+```{r}
+z0 = genotypes.08.genome$Z0
+z1 = genotypes.08.genome$Z1
+plot(z0, z1, xlab = "Z0", ylab = "Z1")
+```
+
+The plot reveals first-degree relatives that need to be removed (one individual from each pair) because some downstream calculations (like PCA) are sensitive to them!
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.07 --remove samples_to_exclude.txt --make-bed --out genotypes.09
+```
+
+
+### Exclude samples with high heterozigosity
+
+Split the dataset into EUR and AFR ancestry subsets and, for each subset separately, calculate statistics to identify samples with high heterozigosity (e.g., due to sample contamination or population outliers) for sample exclusion:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.09 --filter phenotypes.txt EUR --mfilter 6 --het --out genotypes.10.EUR
+plink2 --bfile genotypes.09 --filter phenotypes.txt AFR --mfilter 6 --het --out genotypes.10.AFR
+```
+
+These calculations are NOT LD-sensitive and therefore is usually a good idea to perform some form of LD-based pruning before invoking them!
+
+```{r}
+genotypes.10.EUR.het = read.table("genotypes.10.EUR.het", header = TRUE, check.names = FALSE, as.is = TRUE)
+head(genotypes.10.EUR.het)
+```
+
+For each sample:
+
+- FID = Family ID
+- IID = Within-family/Individual ID
+- O(HOM) = Observed number of homozygotes
+- E(HOM) = Expected number of homozygotes
+- N(NM) = Number of non-missing autosomal genotypes
+- F = Method-of-moments F coefficient estimate
+
+Generate and inspect the F vs (sorted) samples plot to visually identify samples with high heterozigosity for sample exclusion:
+
+```{r}
+par(mfrow = c(1,2))
+
+genotypes.10.EUR.het = read.table("genotypes.10.EUR.het", header = TRUE, check.names = FALSE, as.is = TRUE)
+plot(genotypes.10.EUR.het %>% arrange(F) %$% F, xlab = "Samples", ylab = "F", main = "EUR")
+abline(h = 0, lty = 2)
+
+genotypes.10.AFR.het = read.table("genotypes.10.AFR.het", header = TRUE, check.names = FALSE, as.is = TRUE)
+plot(genotypes.10.AFR.het %>% arrange(F) %$% F, xlab = "Samples", ylab = "F", main = "AFR")
+abline(h = 0, lty = 2)
+
+par(mfrow = c(1,1))
+```
+
+The plots reveal a couple of samples with high heterozigosity. Use an F-value threshold for sample exclusion and merge the two subsets:
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.09 --remove samples_to_exclude.txt --make-bed --out genotypes.11.EUR
+plink2 --bfile genotypes.09 --remove samples_to_exclude.txt --make-bed --out genotypes.11.AFR
+
+plink2 --bfile genotypes.11.EUR --bmerge genotypes.11.AFR --make-bed --out genotypes.11
+```
+
+
+### Exclude population outliers or samples with ancestry discordance
+
+Correct for population structure/stratification to avoid [confouding](https://en.wikipedia.org/wiki/Confounding) by population structure/stratification:
+
+- http://www.ncbi.nlm.nih.gov/pubmed/3177389
+
+- Stratify by self-reported ancestry (e.g., EUR vs AFR)
     - Good for large diffs between populations
     - Not so good for small diffs within populations
 - Use genome-wide genotypes to correct for population sub-structure
-    - Principal components analysis (PCA) is commonly used
-    - PCA summarizes the variability in a dataset where each principal component is a linear combinations of the input variables, with the first component explaining the most variability, the second component (perpendicular to the first) explaining the second most, and so on.
+    - [Principal components analysis](https://en.wikipedia.org/wiki/Principal_component_analysis) (PCA) is commonly used
+    - PCA summarizes the variability in a dataset where each principal component is an independent linear combinations of the input variables, with the first component explaining the most variability, the second component explaining the second most, and so on.
     
-Inspect the PC2 vs PC1 plot to visually identify population structure/sub-structure
+Inspect the (PC3 vs) PC2 vs PC1 plot to visually identify population structure/sub-structure and incorporate the main principal components in the regression model to correct for population structure/stratification!
 
-Unadjusted regression model:
+Unadjusted linear regression model:
 
 $$Y = \beta_G G + \epsilon$$
 
-Adjusted regression model:
+Adjusted linear regression model:
 
 $$Y = \beta_G G + \beta_{PC1} PC1 + \beta_{PC2} PC2 + \beta_{PC3} PC3 + \epsilon$$
 
@@ -85,17 +344,154 @@ which should ideally be 1.00
 
 See also: http://www.nature.com/ejhg/journal/v19/n7/full/ejhg201139a.html
 
-### Compare MAF across different populations (e.g., EUR vs AFR)
+#### Compare minor allele frequencies across different ancestry subsets/populations (e.g., EUR vs AFR)
 
-Generate plink.frq file using `plink --freq`
+Split the dataset into EUR and AFR ancestry subsets and calculate the minor allele frequencies for each subset separately:
 
-A1 is the minor allele and A2 is the major allele. However, what those are depends on the MAF in the population and thus they can be switched in different populations! Therefore, when comparing MAF across populations, calculate MAF = 1-MAF for SNPs where the minor and major alleles are switched, so that A1 and A2 refer to the same alleles across different populations.
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.11 --filter phenotypes.txt EUR --mfilter 6 --freq --out genotypes.12.EUR
+plink2 --bfile genotypes.11 --filter phenotypes.txt AFR --mfilter 6 --freq --out genotypes.12.AFR
+```
 
-### Correct for population structure/stratification using PCA
+```{r}
+genotypes.12.EUR.frq = read.table("genotypes.12.EUR.frq", header = TRUE, check.names = FALSE, as.is = TRUE)
+head(genotypes.12.EUR.frq)
+```
 
-Calculate PCs using [EIGENSOFT](http://www.hsph.harvard.edu/alkes-price/software/) and include in the phenotype file as covariates
+For each SNP:
 
+- CHR = Chromosome code
+- SNP = Variant identifier
+- A1 = Allele 1 (usually minor)
+- A2 = Allele 2 (usually major)
+- MAF = Allele 1 frequency
+- NCHROBS = Number of allele observations
+
+
+Generate and inspect the F vs (sorted) samples plot to visually identify samples with high heterozigosity for sample exclusion:
+
+```{r}
+genotypes.12.EUR.frq = read.table("genotypes.12.EUR.frq", header = TRUE, check.names = FALSE, as.is = TRUE)
+genotypes.12.AFR.frq = read.table("genotypes.12.AFR.frq", header = TRUE, check.names = FALSE, as.is = TRUE)
+
+genotypes.12.merged.frq = merge(genotypes.12.EUR.frq, genotypes.12.AFR.frq, by = "SNP", suffixes = c(".EUR",".AFR"))
+
+head(genotypes.12.merged.frq)
+```
+
+A1 is the minor allele and A2 is the major allele. However, what those alleles are depends on their frequencies in a specific ancestry subset/population and thus they can be swapped in different ancestry subsets/populations (e.g., EUR vs AFR)! Therefore, when comparing minor allele frequencies across ancestry subsets/populations, calculate MAF = 1-MAF for SNPs where the minor and major alleles are swapped, so that A1 and A2 refer to the same alleles across different ancestry subsets/populations.
+
+```{r}
+table(genotypes.12.merged.frq$A1.EUR != genotypes.12.merged.frq$A1.AFR)
+
+genotypes.12.merged_and_corrected.frq = genotypes.12.merged.frq %>%
+  sample_n(1000) %>%
+  rowwise() %>%
+  mutate(MAF.AFR = ifelse(A1.AFR != A1.EUR, 1-MAF.AFR, MAF.AFR)) %>%
+  select(SNP, CHR.EUR, A1.EUR, A2.EUR, MAF.EUR, MAF.AFR) %>%
+  rename(CHR = CHR.EUR, A1 = A1.EUR, A2 = A2.EUR)
+
+head(genotypes.12.merged_and_corrected.frq)
+```
+
+```{r}
+x = genotypes.12.merged_and_corrected.frq$MAF.EUR
+y = genotypes.12.merged_and_corrected.frq$MAF.AFR
+plot(x, y, xlab = "MAF (EUR)", ylab = "MAF (AFR)")
+abline(lm(y ~ x), col = "red")
+abline(a = 0, b = 1, col = "blue")
+```
+
+The plot reveal that, while weakly correlated, minor allele frequencies are, as expected, different in the EUR and AFR ancestry subsets.
+
+
+
+#### Correct for population structure/stratification using PCA
+
+Calculate PCs using [EIGENSOFT](https://github.com/DReichLab/EIG) or [SNPRelate](http://www.bioconductor.org/packages/release/bioc/vignettes/SNPRelate/inst/doc/SNPRelateTutorial.html) and include in the phenotype file as covariates.
+
+```{r}
+# EUR
+GBR = phenotypes$Population == "GBR"
+IBS = phenotypes$Population == "IBS"
+
+# AFR
+ACB = phenotypes$Population == "ACB"
+ASW = phenotypes$Population == "ASW"
+ESN = phenotypes$Population == "ESN"
+
+plot(phenotypes$PC1, phenotypes$PC2, xlab = "PC1", ylab = "PC2", type = "n")
+
+points(phenotypes$PC1[GBR], phenotypes$PC2[GBR], col = "black", pch = 5)
+points(phenotypes$PC1[IBS], phenotypes$PC2[IBS], col = "grey", pch = 6)
+points(phenotypes$PC1[ACB], phenotypes$PC2[ACB], col = "red", pch = 0)
+points(phenotypes$PC1[ASW], phenotypes$PC2[ASW], col = "blue", pch = 1)
+points(phenotypes$PC1[ESN], phenotypes$PC2[ESN], col = "green", pch = 2)
+```
 
 ## Univariate association analysis
 
-XXX
+Y1 in the phenotypes file is a continuous trait (e.g., weight, height, blood pressure, etc).
+
+```{r}
+boxplot(phenotypes$Y1 ~ phenotypes$Gender)
+```
+
+Linear regression is used to study the association between genotype and a continuos trait/phenotype (Y1):
+
+$$Y_1 = a + b_G Z(G) + b'X + \epsilon$$
+
+Z(G) is the coding of the genotype (A = major allele, B = minor allele):
+
+Model     Z(G=AA) Z(G=AB) Z(G=BB) PLINK
+--------- ------- ------- ------- ---------------
+Additive  0       1       2       --add (default)
+Dominant  0       1       1       --dominant
+Recessive 0       0       1       --recessive
+--------- ------- ------- ------- ---------------
+
+It is important to report whether the major or the minor allele is used as the effect allele (PLINK uses the minor allele as the effect allele)!
+
+
+### Unadjusted linear regression model
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.11 --pheno phenotypes.txt --pheno-name Y1 --linear --ci 0.95 --out genotypes.13
+```
+
+```{r}
+genotypes.13.assoc.linear = read.table("genotypes.13.assoc.linear", header = TRUE, as.is = TRUE)
+head(genotypes.13.assoc.linear)
+
+pvals.unadjusted = genotypes.13.assoc.linear %>% filter(!is.na(P)) %>% arrange(P) %$% P
+lambdagc.unadjusted = median(genotypes.13.assoc.linear$STAT^2, na.rm = TRUE)/median(qchisq(0.5, 1))
+qq(pvals.unadjusted, main = latex2exp(paste0("$\\lambda_{GC}$ = ", round(lambdagc.unadjusted, 4))))
+```
+
+
+```{r}
+manhattan(genotypes.13.assoc.linear, ylim = c(0, 12))
+```
+
+
+### Adjusted linear regression model
+
+```{r engine='sh', eval=FALSE}
+plink2 --bfile genotypes.11 --pheno phenotypes.txt --pheno-name Y1 --covar phenotypes.txt --covar-name Gender,PC1-PC3 --hide-covar --linear --ci 0.95 --out genotypes.14
+```
+
+```{r}
+genotypes.14.assoc.linear = read.table("genotypes.14.assoc.linear", header = TRUE, as.is = TRUE)
+head(genotypes.14.assoc.linear)
+
+pvals.adjusted = genotypes.14.assoc.linear %>% filter(!is.na(P)) %>% arrange(P) %$% P
+lambdagc.adjusted = median(genotypes.14.assoc.linear$STAT^2, na.rm = TRUE)/median(qchisq(0.5, 1))
+qq(pvals.adjusted, main = latex2exp(paste0("$\\lambda_{GC}$ = ", round(lambdagc.adjusted, 4))))
+```
+
+
+```{r}
+manhattan(genotypes.14.assoc.linear, ylim = c(0, 12))
+```
+
+[Logistic regression is used to study the association between genotype and a binary trait/phenotype (AFF/UNAFF)]
