@@ -1,7 +1,7 @@
 ---
 title: "Genome-wide association studies"
 author: "Edoardo “Dado” Marcora"
-date: "August 3, 2015"
+date: "August 3, 2012"
 output: html_document
 ---
 
@@ -501,6 +501,58 @@ genotypes.14.assoc.linear %>% filter(!is.na(P) & P <= 10e-6)
 [Logistic regression is used to study the association between genotype and a binary trait/phenotype (AFF/UNAFF)]
 
 
-## SNP imputation and GWAS meta-analysis
+Covariate adjustment is useful to eliminate confounding due to population structure. It can also increase power when adjusting for non-confounding variables (e.g., gender). But be careful, whether adjusting for a variable associated with Y1 makes sense depends on the study design, analysis type and the underlying causal model!
+
+- http://www.ncbi.nlm.nih.gov/pubmed/25640676
+- http://www.ncbi.nlm.nih.gov/pubmed/22820511
+- http://www.ncbi.nlm.nih.gov/pubmed/23162385
+- http://www.ncbi.nlm.nih.gov/pubmed/20025064
+
+
+## Genotype imputation
+
+The goal of imputation is to infer genotypes at untyped markers and it is necessary for cross-chip comparisons (e.g., Illumina and Affymetrix GWAS chips).
+
+Two widely used methods for imputation are:
+
+- MaCH/Minimac
+    - http://genome.sph.umich.edu/wiki/MaCH
+    - http://genome.sph.umich.edu/wiki/Minimac3
+    - http://genome.sph.umich.edu/wiki/Minimac3_Imputation_Cookbook
+- Impute/Impute2
+    - https://mathgen.stats.ox.ac.uk/impute/impute.html
+    - https://mathgen.stats.ox.ac.uk/impute/impute_v2.html
+    - http://genome.sph.umich.edu/wiki/IMPUTE2:_1000_Genomes_Imputation_Cookbook
+
+
+## GWAS meta-analysis
+
+Meta-analysis is necessary because individual studies are often underpowered and it is impractical to share sample-level data
 
 - http://www.ncbi.nlm.nih.gov/pubmed/24762786
+
+Fixed-effect meta-analysis is widely used for GWAS (the classical random-effect meta-analysis is not suitable for GWAS) but alternatives that are more powerful in the presence of effect heterogeneity are also available:
+
+- METASOFT
+    - http://genetics.cs.ucla.edu/meta/ 
+    - http://www.buhmhan.com/research
+    - http://zarlab.cs.ucla.edu/heterogeneity-and-meta-analysis/
+    - http://www.cell.com/ajhg/abstract/S0002-9297(14)00071-8
+    
+Meta-analysis is not difficult, but it is difficult to keep track of SNPs across studies due to the fact that often different studies use a different effect allele for the same SNP!
+
+- METAL - Meta-analysis Helper
+    - http://genome.sph.umich.edu/wiki/METAL
+
+## Multivariate association analysis - Geneset association tests
+
+- Aggregate univariate test statistics
+    - Sum the N largest chi-square associations statistics out of all SNPs that are located on/near genes that belong to a particular biological pathway (e.g., DNA repair genes for cancer)
+        - `plink --set-test`
+- Multivariate models
+    - Likelihood ratio statistic, Hotelling's T
+    - Kernel machine regression, e.g., [SKAT](http://www.hsph.harvard.edu/skat/)
+    - When testing the association between a trait and a single imputed SNP we are essentially testing the association between the trait and a weighted average of multiple genotyped SNPs, where the weights are determined by the imputation reference panel
+
+
+

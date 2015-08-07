@@ -1,0 +1,16 @@
+---
+title: "RNA-seq"
+author: "Edoardo “Dado” Marcora"
+date: "August 3, 2009"
+output: html_document
+---
+
+```{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(magrittr)
+library(latex2exp)
+library(qqman)
+```
+
+## Introduction to RNA-seq
+
