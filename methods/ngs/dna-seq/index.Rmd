@@ -1,11 +1,13 @@
 ---
 title: "DNA-seq"
 author: "Edoardo “Dado” Marcora"
-date: "August 2, 2015"
+date: "August 2, 2013"
 output: html_document
 ---
 
 ## Variant discovery and genotyping
+
+- https://github.com/hbc/edX/blob/master/edX_Notes.md
 
 - Read data in [FASTQ format](https://en.wikipedia.org/wiki/FASTQ_format) and [reference genome](https://en.wikipedia.org/wiki/Reference_genome) in [FASTA format](https://en.wikipedia.org/wiki/FASTA_format)
 - QC read data using [FASTQC](http://www.bioinformatics.bbsrc.ac.uk/projects/fastqc/)
