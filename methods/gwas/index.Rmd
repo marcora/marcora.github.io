@@ -464,13 +464,15 @@ genotypes.13.assoc.linear = read.table("genotypes.13.assoc.linear", header = TRU
 head(genotypes.13.assoc.linear)
 
 pvals.unadjusted = genotypes.13.assoc.linear %>% filter(!is.na(P)) %>% arrange(P) %$% P
-lambdagc.unadjusted = median(genotypes.13.assoc.linear$STAT^2, na.rm = TRUE)/median(qchisq(0.5, 1))
+lambdagc.unadjusted = median(genotypes.13.assoc.linear$STAT^2, na.rm = TRUE)/qchisq(0.5, 1)
 qq(pvals.unadjusted, main = latex2exp(paste0("$\\lambda_{GC}$ = ", round(lambdagc.unadjusted, 4))))
 ```
 
 
 ```{r}
 manhattan(genotypes.13.assoc.linear, ylim = c(0, 12))
+
+genotypes.13.assoc.linear %>% filter(!is.na(P) & P <= 10e-6)
 ```
 
 
@@ -485,13 +487,20 @@ genotypes.14.assoc.linear = read.table("genotypes.14.assoc.linear", header = TRU
 head(genotypes.14.assoc.linear)
 
 pvals.adjusted = genotypes.14.assoc.linear %>% filter(!is.na(P)) %>% arrange(P) %$% P
-lambdagc.adjusted = median(genotypes.14.assoc.linear$STAT^2, na.rm = TRUE)/median(qchisq(0.5, 1))
+lambdagc.adjusted = median(genotypes.14.assoc.linear$STAT^2, na.rm = TRUE)/qchisq(0.5, 1)
 qq(pvals.adjusted, main = latex2exp(paste0("$\\lambda_{GC}$ = ", round(lambdagc.adjusted, 4))))
 ```
 
 
 ```{r}
 manhattan(genotypes.14.assoc.linear, ylim = c(0, 12))
+
+genotypes.14.assoc.linear %>% filter(!is.na(P) & P <= 10e-6)
 ```
 
 [Logistic regression is used to study the association between genotype and a binary trait/phenotype (AFF/UNAFF)]
+
+
+## SNP imputation and GWAS meta-analysis
+
+- http://www.ncbi.nlm.nih.gov/pubmed/24762786

@@ -24,6 +24,7 @@ install.packages("devtools")
 ```{r eval=FALSE}
 install.packages("rsnps")
 install.packages("qqman")
+install.packages("coloc")
 ```
 
 ## R packages (devtools)
