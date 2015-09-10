@@ -1,0 +1,101 @@
+---
+title: "ChIP-seq"
+author: "Edoardo “Dado” Marcora"
+date: "September 9, 2015"
+output: html_document
+---
+
+Transcription factors bind to chromatin in sequence-specific manner to regulate gene expression. Genes co-expressed in different conditions are not always under the control of the same transcription factor, although are more likely. Transcription factor binding in bacteria or yeast often only regulate the nearest gene expression, whereas in mammalian genomes could regulate the expressions of genes far away.
+
+
+## ChIP-seq technique
+
+ChIP stands for Chromatin Immuno Precipitation, and ChIP-seq can detect genome-wide in vivo binding site of transcription factors. It is often conducted in millions of cells, where protein-DNA interactions are fixed, then chromatin is sheared into small pieces. Then a factor-specific antibody is used to pull down the factor as well as the DNA attached to it. The process has noise since sometimes antibody is not specific enough and there are random DNA stick to the pull down, but overall the factor-bound DNA will be enriched.
+
+Reads from a ChIP-seq experiments are normally provided as FASTQ-formatted files. FASTQC is used for QC. BWA (more accurate but also slower) or Bowtie are often used for alignment of the reads to the reference genome. For long (e.g., 100 bps) paired-end reads and very deep sequencing (e.g., 100e6 reads), the STAR aligner is also a very good choice. You should expect at least 50% of the reads to map to the reference genome if the ChIP-seq cDNA library is good!
+
+ChIP pipeline:
+
+1) Cross-link protein to DNA (formaldehyde)
+2) Sonicate DNA (chop into fragments)
+3) Immunoprecipitate w/ antibody against transcription factor of interest
+4) Make libraries and sequence
+
+To get a ChIP-seq negative control, sequence the output from step #2.
+
+
+## ChIP-seq peak calling using [MACS](http://liulab.dfci.harvard.edu/MACS) (Model-based analysis for ChIP-seq)
+
+ChIP-seq peak calling using MACS [PMID:18798982](http://www.ncbi.nlm.nih.gov/pubmed/18798982)
+
+Transcription factor binding sites are enriched in the ChIP protocol, and in sequencing the plus-strand reads will be mapped to the left of the precise binding location, while minus-strnad reads will be mapped to the right of binding. ChIP fragments are often 100-300bp long, and sequencing only sequences the ends of the fragments. If plus-strand reads (to the left of binding) and minus-strand reads (to the right of the binding) are separated by 120bp, the precise binding site should be right in the middle of the two. So shifting reads by 60bp in 3' direction will find the precise binding location.
+
+Even when sequencing the entire genome (genome-wide background), reads do NOT map (to, for example, 1 Kbps regions) according to the expected Poisson distribution (with lambda = total # of reads/length of the genome in Kbps) but instead they map according to a Poisson distribution with over-dispersion, i.e., certain 1 Kbps regions have more reads mapped to them than expected by the Poisson distribution, other less. Therefore, ChIP-seq peaks cannot be called based on a global lambda calculated across the genome as shown above. Instead, they are called according to a local lambda calculated across regions of a few hundred bps to a few thousand kbps in the negative control sample, i.e., the input DNA.
+
+MACS uses a sliding window across the genome to find regions of enrichment/to call ChIP-seq peaks by calculating statistical enrichment of reads in ChIP over control samples using a Poisson distribution and uses a dynamic background with a robust estimate of lambda parameter based on the genome-wide-background and the no-antibody negative controls over 1kb, 5kb, and 10kb to adjust for any local chromatin or sequencing bias that causes overdispersion.
+
+MACS uses a sliding window across the genome to find regions where the ChIP samples are enriched for mapped reads compared to the negative controls. MACS uses a Poisson distribution, but with a dynamic lamda parameter. The lamda estimated from the control just over the ChIP peaks is often inaccurate because the negative control might not have enough reads in these short peaks (200-300bp). Therefore, MACS look at lambda estimates over the whole genome, the slideing window (~200-300bp), and regions including 1kb, 5kb, 10kb centered at the slideing window, and pick the biggest (most robust) value of lambda to estimate the enrichment in the ChIP samples.
+
+
+## ChIP-seq QC
+
+1) before mapping: FASTQC
+2) after mapping: % of uniquely mapped reads, the higher the better
+3) after mapping: % of uniquely mapped locations (i.e., NOT duplicate reads), the higher the better
+4) after mapping: library complexity or PBC score
+5) after peak calling: small FDR and big FC of called peaks
+6) after peak calling: FRIP score (% of reads in peaks, i.e., S/N), the higher the better
+7) after peak calling: overlap with the union of all known DNAse-sensitive sites (DNAse-seq)
+8) after peak calling: overall ChIP-seq peaks should have better evolutionary conservation than genome background (If the ChIP-seq experiment of a transcription factor (TF) worked, then it should capture all the binding sites of the TF in that cell condition. Because TF binding sites are under more evolutionary constraint, they will have overall better conservation than genome background. However, non-conserved sites might still be functional, and very often only a small portion of the total binding peaks have good evolutionary conservation)
+9) after peak calling: enrichment of TF binding sites near the TSS (even though only small % of all the TF binding sites are at the gene promoters, there is still an enrichment of overall ChIP-seq peak and signal enrichment near the transcription start sites of genes) [CEAS](http://liulab.dfci.harvard.edu/CEAS/) for visualization]
+10) after peak calling: enrichment of TF binding sites in promoters/enhancers
+11) after peak calling: good signal and peak correlation between two biological replicates (ChIP-seq data rarely has as good correlation as RNA-seq (0.95), since the protocol is pretty complex. Normally signal correlation > 0.6 and peak overlap over 60% are considered good replicate agreement.)
+12) after peak calling: For transcription factor (TF) ChIP-seq, the correct TF motif should be enriched more in the stronger peaks, and more enriched in the peak center (summit).
+
+FASTQC is an indicator of sequencing quality. If a ChIP-seq data has good fastQC but low mappability, the ChIP-seq protocol / technique should to be improved. High ChIP-seq read redundancy is an indication of low starting DNA and PCR over amplification. MACS has better performance if using uniqually mapped reads and keeping only one of the redundant reads. Peaks in the controls (higher in control over ChIP) gives an idea of noise and false positives in the peak calling. ChIP-seq peak overlap with DNase hypersensitivity regions is an indicator of good data quality.
+
+Unlike RNA-seq, the recommandation is to remove and possibly avoid having too many duplicate reads because they increase the noise for peak calling!
+
+Narrow vs broad peak calling
+
+## Running MACS2 for ChIP-seq peak calling
+
+```{r engine='bash', eval=FALSE}
+pip install MACS2 # to install MACS
+pip install -u MACS2 # to update MACS
+
+macs2 --version
+macs2 --help # to list all the MACS subcommands
+macs2 subcommand --help # to list all the subcommand options, e.g., macs2 callpeak --help
+
+macs2 callpeak -t CTCF_PE_ChIP_chr22.bam -c CTCF_PE_CTRL_chr22.bam -n CTCF_PE_chr22 -g hs
+# -> CTCF_PE_chr22_model.R
+# -> CTCF_PE_chr22_peaks.narrowPeak
+# -> CTCF_PE_chr22_peaks.xls
+# -> CTCF_PE_chr22_summits.bed
+```
+
+
+## TF binding sites and target genes
+
+TF binding and target gene is a many-by-many relationship: one binding site can regulate the expression of multiple genes (stochastic so might be different in different cells) and one gene is regulated by mulitple nearby enhancers. In mammalian system, binding sites can appear in promoters, introns, distal locations either before or after the gene, and sometimes even a few genes away, and can still regulate a gene's expression level. This is often determined by how much a TF binding is looping (3D chromatin structure) is looping to the promoter of the gene, which often follows an exponential decay based on the distance between the binding site and the gene promoter.
+
+Whenever the cell is purturbed (e.g. turn on a TF), there are always genes showing either up or down expression, so one gene going up or down doesn't necessarily mean the TF is an activator or repressor, even if the TF has a binding site near the gene. A TF is an activator if overall genes with more and closer TF binding sites show significant more up-regulation of expression when the TF is on, and a TF can be both an activator or a repressor by interacting with different other TFs.
+
+Pioneering TFs (e.g., PU.1) for cell-type specific binding of signal-dependent TFs (e.g., LXR/RXR)
+
+---
+
+[PMID:17013392](http://www.ncbi.nlm.nih.gov/pubmed/17013392)
+
+[BETA software suite](http://cistrome.org/BETA/) 
+
+http://www.nature.com/nprot/journal/v8/n12/full/nprot.2013.150.html
+
+---
+
+The [Cistrome Project](http://cistrome.org/Cistrome/Cistrome_Project.html):
+
+- [Cistrome Data Browser](http://cistrome.org/db)
+- [Cistrome Analysis Pipeline](http://cistrome.org/ap)
+
