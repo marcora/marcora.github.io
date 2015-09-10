@@ -4,8 +4,8 @@ title: Edoardo &quot;Dado&quot; Marcora's notes
 
 - [How to organize a computational biology project](http://www.ncbi.nlm.nih.gov/pubmed/19649301/)
 - Next-generation sequencing data analysis
-    - RNA-seq
-    - ChIP-seq
+    - [RNA-seq](./methods/ht-seq/rna-seq/)
+    - [ChIP-seq](./methods/ht-seq/chip-seq/)
     - DNA-seq
-        - [Variant discovery and genotyping](./methods/ngs/dna-seq/)
+        - [Variant discovery and genotyping](./methods/ht-seq/dna-seq/)
 - [Genome-wide association studies](./methods/gwas/)
