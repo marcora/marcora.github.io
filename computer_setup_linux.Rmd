@@ -1,0 +1,70 @@
+---
+title: "Computer setup (Linux)"
+author: "Edoardo “Dado” Marcora"
+date: "August 27, 2015"
+output: html_document
+---
+
+
+## Install linuxbrew and perlbrew if not sudo
+
+https://github.com/Homebrew/linuxbrew/wiki/Standalone-Installation
+
+Add the following lines to .bashrc:
+
+```{r engine='bash', eval=FALSE}
+module load glib
+module load zlib
+module load binutils
+module load gcc
+module load git
+module load python
+module load ruby
+
+export PATH="$HOME/.linuxbrew/bin:$PATH"
+export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+export HOMEBREW_TEMP="$HOME/tmp"
+```
+
+Install [linuxbrew](http://brew.sh/linuxbrew/)
+
+```{r engine='bash', eval=FALSE}
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"
+```
+
+Test installation:
+
+```{r engine='bash', eval=FALSE}
+ln -s $(which gcc) $HOME/.linuxbrew/bin/gcc-$(gcc -dumpversion |cut -d. -f1,2)
+ln -s $(which g++) $HOME/.linuxbrew/bin/g++-$(g++ -dumpversion |cut -d. -f1,2)
+ln -s $(which gfortran) $HOME/.linuxbrew/bin/gfortran-$(gfortran -dumpversion |cut -d. -f1,2)
+brew install hello && brew test hello; brew remove hello
+```
+
+---
+
+Install [perlbrew](http://perlbrew.pl/).
+
+```{r engine='bash', eval=FALSE}
+curl -kL http://install.perlbrew.pl | bash
+
+perlbrew init
+perlbrew mirror
+perlbrew install-cpanm
+perlbrew install-patchperl
+perlbrew available
+perlbrew install perl-XXX
+perlbrew switch perl-XXX
+perlbrew clean
+```
+
+Add the following line to .bashrc:
+
+```{r engine='bash', eval=FALSE}
+source ~/perl5/perlbrew/etc/bashrc
+```
+
+## Install Anaconda
+
+XXX

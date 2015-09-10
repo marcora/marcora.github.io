@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Edoardo Dado Marcora" />
+
+<meta name="date" content="2015-08-27" />
+
+<title>Computer setup (Linux)</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<meta name="author" content="Edoardo &quot;Dado&quot; Marcora">
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div id="header">
+<h1 class="title">Computer setup (Linux)</h1>
+<h4 class="author"><em>Edoardo “Dado” Marcora</em></h4>
+<h4 class="date"><em>August 27, 2015</em></h4>
+</div>
+
+
+<div id="install-linuxbrew-and-perlbrew-if-not-sudo" class="section level2">
+<h2>Install linuxbrew and perlbrew if not sudo</h2>
+<p><a href="https://github.com/Homebrew/linuxbrew/wiki/Standalone-Installation#set-other-environment-variables" class="uri">https://github.com/Homebrew/linuxbrew/wiki/Standalone-Installation#set-other-environment-variables</a></p>
+<p>Add the following lines to .bashrc:</p>
+<pre class="bash"><code>module load glib
+module load zlib
+module load binutils
+module load gcc
+module load git
+module load python
+module load ruby
+
+export PATH=&quot;$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH&quot;
+export MANPATH=&quot;$HOME/.linuxbrew/share/man:$MANPATH&quot;
+export INFOPATH=&quot;$HOME/.linuxbrew/share/info:$INFOPATH&quot;
+export HOMEBREW_TEMP=&quot;$HOME/tmp&quot;</code></pre>
+<p>Install <a href="http://brew.sh/linuxbrew/">linuxbrew</a></p>
+<pre class="bash"><code>ruby -e &quot;$(curl -fsSL https://raw.github.com/Homebrew/linuxbrew/go/install)&quot;</code></pre>
+<p>Test installation:</p>
+<pre class="bash"><code>ln -s $(which gcc) $HOME/.linuxbrew/bin/gcc-$(gcc -dumpversion |cut -d. -f1,2)
+ln -s $(which g++) $HOME/.linuxbrew/bin/g++-$(g++ -dumpversion |cut -d. -f1,2)
+ln -s $(which gfortran) $HOME/.linuxbrew/bin/gfortran-$(gfortran -dumpversion |cut -d. -f1,2)
+brew install hello &amp;&amp; brew test hello; brew remove hello</code></pre>
+<hr />
+<p>Install <a href="http://perlbrew.pl/">perlbrew</a>.</p>
+<pre class="bash"><code>curl -kL http://install.perlbrew.pl | bash
+perlbrew init
+perlbrew mirror
+perlbrew install-cpanm
+perlbrew install-patchperl
+perlbrew available
+perlbrew install perl-XXX
+perlbrew switch perl-XXX
+perlbrew clean</code></pre>
+</div>
+<div id="install-anaconda" class="section level2">
+<h2>Install Anaconda</h2>
+</div>
+
+<p>&copy; 2015 Edoardo "Dado" Marcora</p>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
