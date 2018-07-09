@@ -33,19 +33,23 @@ RNA-seq is a technology that uses next-generation/high-throughput sequencing (NG
 
 Transcript quantification based on RNA-seq counts is unstable due to ambiguity and bias (not-uniform coverage along the length of the transcript due to technical bias).
 
+[RNA-seq Data Analysis: A Practical Approach](https://www.crcpress.com/RNA-seq-Data-Analysis-A-Practical-Approach/Korpelainen-Tuimala-Somervuo-Huss-Wong/9781466595002) [local copy](rna-seq_data_analysis.pdf)
+
 - [Challenges in and recommendations for experimental design and analysis of RNA-seq data](http://www.ncbi.nlm.nih.gov/pubmed/25271838)
 
 Here, we will focus on comparing the expression levels of genes across different samples, by counting the number of reads which overlap the exons of genes defined by a known annotation of the reference genome.
 
----
 
-The FPKM (fragments per kilobase of sequence per million mapped reads) is a normalized measure of expression level (having divided out the transcript length and the number of mapped reads).
+## Normalization and measures of transcript abundance
 
-TPM (transcripts per million), is a linear scaling of the FPKM, such that we would expect a gene with 1 TPM to have one molecule in a population of one million mRNA.
+- R/FPKM (fragments per kilobase of sequence per million mapped reads) is a normalized measure of expression level (having divided out the transcript length and the number of mapped reads) [Mapping and quantifying mammalian transcriptomes by RNA-Seq](http://www.nature.com/nmeth/journal/v5/n7/abs/nmeth.1226.html)
+- TMM (trimmed mean of M values) [A scaling normalization method for differential expression analysis of RNA-seq data](http://www.genomebiology.com/2010/11/3/R25)
+- TPM (transcripts per million), is a linear scaling of the FPKM, such that we would expect a gene with 1 TPM to have one molecule in a population of one million mRNA. TPM is equal to: (FPKM / sum(FPKM)) * 1 million
+- CPM (counts per million)
 
-TPM is equal to: (FPKM / sum(FPKM)) * 1 million
+Use TPM to report gene expression estimates. Use TMM or DESeq or similar normalization for differential expression analysis. Use TMM + a log transform (e.g., [limma-voom](http://www.genomebiology.com/2014/15/2/R29)) for clustering and visualization.
 
-CPM (counts per million)
+- [Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples](http://link.springer.com/article/10.1007%2Fs12064-012-0162-3)
 
 
 ## RNA-seq data sources
@@ -60,14 +64,23 @@ CPM (counts per million)
 - [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc)
     - [Manual](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help)
     - [Chapter about duplicate reads](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/8%20Duplicate%20Sequences.html)
+- [cutadapt](https://cutadapt.readthedocs.org/)
+- [Trim Galore!](http://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
 - [FASTQC Aggregator](https://github.com/staciaw/fastqc_aggregator)
 - [RSeQC](http://rseqc.sourceforge.net/)
 
-- Adapter trimming: Adapters that are used in the sequencing can sometimes show up in the read sequence. Because these adapter sequences are non-genomic, they can cause problems with read alignment. A number of software packages can be used to find and trim adapters in FASTQ files, e.g., [Scythe](https://github.com/vsbuffalo/scythe), [FASTX-Toolkit](http://hannonlab.cshl.edu/fastx_toolkit) and [cutadapt](https://code.google.com/p/cutadapt).
+- *Adapter trimming*: Adapters that are used in the sequencing can sometimes show up in the read sequence. Because these adapter sequences are non-genomic, they can cause problems with read alignment. A number of software tools can be used to find and trim adapters in FASTQ files, e.g., [cutadapt](https://code.google.com/p/cutadapt), [FASTX-Toolkit](http://hannonlab.cshl.edu/fastx_toolkit), or [Scythe](https://github.com/vsbuffalo/scythe).
 
-- Quality trimming: The 3' end of reads often has lower quality, and software like [FASTX-Toolkit](http://hannonlab.cshl.edu/fastx_toolkit) or [cutadapt](https://code.google.com/p/cutadapt) offers to trim away sequence which would likely interfere with read alignment (given that there is enough remaining 5' sequence for unique alignments). The trade-off between quality trimming vs other methods of error correction is likely specific to the characteristics on individual datasets.
+- *Quality trimming*: The 3' (or 5') end of reads often has lower quality, and software like [cutadapt](https://code.google.com/p/cutadapt), [FASTX-Toolkit](http://hannonlab.cshl.edu/fastx_toolkit) or [PRINSEQ](http://prinseq.sourceforge.net) can trim away sequence with low quality score which would likely interfere with read alignment (e.g., q < 20). At the same time, these software tools also can ensure that there is enough remaining sequence for unique alignments (e.g., len > 30). Therefore, these software tools require (at least) two user-defined parameters:
 
-- Length adjustment: When the length of paired-end fragments is less than 2 * read length, there can be a benefit from combining overlapping pairs into a single long read using software like [FLASH](http://ccb.jhu.edu/software/FLASH).
+  - quality score cutoff
+  - min length of sequence to keep
+
+  - [An Extensive Evaluation of Read Trimming Effects on Illumina NGS Data Analysis](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0085024)
+  - [On the optimal trimming of high-throughput mRNA sequence data](http://journal.frontiersin.org/article/10.3389/fgene.2014.00013/abstract)
+
+
+- Length adjustment: When the length of paired-end fragments is less than 2 * read length, there can be a benefit from combining overlapping pairs into a pseudo-single-end long read using software like [FLASH](http://ccb.jhu.edu/software/FLASH).
 
 
 ## Alignment of RNA-seq reads to a reference genome/transcriptome 
@@ -491,6 +504,7 @@ dds.sva$SV2 <- svseq$sv[, 2]
 design(dds.sva) <- ~ SV1 + SV2 + dex
 dds.sva <- DESeq(dds.sva)
 ```
+
 
 ## Differential expression analysis at the exon level using DEXSeq
 

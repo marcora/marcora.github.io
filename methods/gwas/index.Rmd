@@ -556,3 +556,94 @@ Meta-analysis is not difficult, but it is difficult to keep track of SNPs across
 
 
 
+*******************************************************************************
+
+#########################################################
+#			QC SYNTAX			#
+#			Sample QC			#
+#########################################################
+
+# 1.Identify individuals with discordant sex information
+plink --bfile example --check-sex --out sexstat --noweb
+
+# 2.Select individuals with Status=“PROBLEM in the  file sexstat.sexcheck
+grep "PROBLEM" sexstat.sexcheck >fail_sex_check_example.txt
+
+# 3. Calculate missingness score each individual
+plink --bfile example --missing --out example_miss --noweb
+
+# 4.Calculate heterozygosity score for each individual  
+plink --bfile example --het --out example_het --noweb
+
+# 5. Plot the distribution of missingness and heterozygosity scores using the script het_miss.R in R-Studio or type in the command
+R CMD BATCH miss_het_plot.R
+
+# 6. Based on preselected cutoff identify individuals with high missingness and/or outlier heterozygosity
+perl select_miss_het.pl
+
+# 7.Join QC failed individuals
+cat fail_sex_check_example.txt fail_miss_het_example.txt | sort -k1 | uniq > fail_example_inds.txt 
+
+
+#Skipped IBS and Ancestry calculations due to time and resource limitations
+
+# 8. Remove QC failed individuals from data
+plink --bfile example --remove fail_example_inds.txt --make-bed --out clean_inds_example --noweb
+
+
+#########################################################
+#			QC SYNTAX			#
+#			SNP QC				#
+#########################################################
+
+# 9. Calculate minor allele frequencies
+plink --bfile clean_inds_example --freq --out clean_inds_example_freq --noweb
+
+# 10. Plot the distribution of MAF values using the script maf_plot.R (in R-Studio or using the command below) to decide a MAF cutoff
+R CMD BATCH maf_plot.R
+
+# 11. Calculate SNP missingness
+plink --bfile clean_inds_example --missing --out clean_inds_example_missing --noweb
+
+# 12. Plot the distribution of missingness values using the script snpmiss_plot.R (in R-Studio) to decide a missingness cutoff
+R  CMD BATCH snpmiss_plot.R
+
+# 13. Calculate differential missingness
+plink --bfile clean_inds_example --test-missing --out clean_inds_example_test_missing --noweb
+
+# 14. Plot the distribution of differential missingness P-values using the script snpmiss_plot.R (in R-Studio or using the command below) to decide a differential missingness P-value cutoff
+R CMD BATCH diffmiss_plot.R
+
+# 15. Select SNPs showing extreme differential missingness 
+perl select_diffmiss.pl 
+
+# 16. Identify SNPs with extreme HWE deviations
+plink --bfile clean_inds_example --hardy --out clean_inds_example_hwe --noweb
+
+#17. Select Unaffected only for HWE Plot
+head -1 clean_inds_example_hwe.hwe > clean_inds_example_hweu.hwe | grep "UNAFF" clean_inds_example_hwe.hwe >> clean_inds_example_hweu.hwe
+
+# 18. Plot the distribution of HWE P-values(in controls) using the script hwe_plot.R (in R-Studio or use the command below) to decide a HWE P-value cutoff
+R CMD BATCH hwe_plot.R
+
+# 19 Remove SNPs failing QC
+plink --bfile clean_inds_example --maf 0.01 --geno 0.05 --exclude fail_diffmiss_example.txt --hwe 0.00001 --make-bed --out clean_example --noweb
+
+# 20. Remove X chr SNPs
+
+plink --bfile clean_example --chr 23 --make-bed --out xsnps --noweb
+plink --noweb --bfile clean_example --exclude xsnps.bim --make-bed --out qced_example
+
+#################################################################
+#		  CLEAN UP		    		       	#
+#   move log and intermediate files to another directory        #
+#################################################################
+mv *.log Logfiles/.
+mv *.nof logfiles/.
+mv clean_inds*.* logfiles/.
+mv example_*.* logfiles/.
+mv clean_example*.* logfiles/.
+mv fail_*.* logfiles/.
+mv sexstat*.* logfiles/.
+mv xsnps.* logfiles/.
+mv *.Rout logfiles/.

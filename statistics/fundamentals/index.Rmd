@@ -1,0 +1,153 @@
+---
+title: "Fundamentals of Statistics"
+output: html_document
+---
+
+## Basics
+
+[Ten Simple Rules for Effective Statistical Practice](http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004961)
+
+### Variables, Measurements, Sample vs Population, Statistic vs Parameter
+
+Statistics (or statistical analysis) is the study of datasets.
+
+A dataset (or data set) is a collection of data. Most commonly a data set corresponds to the contents of a single database table where every column of the table represents a particular variable, and each row corresponds to a given member of the dataset in question. The data set lists values for each of the variables, such as height and weight of a person, for each member of the dataset. Each value is known as a datum. The dataset may comprise data for one or more members, corresponding to the number of rows. The term data set may also be used more loosely.
+
+In statistics, datasets usually come from actual observations obtained by sampling a population, and each row corresponds to the observations on one element of that population. 
+
+Population = all the elements of a dataset.
+
+Sample = a subset (one or more elements) of a dataset/population.
+
+A sampling method is a procedure for selecting the elements of a sample from a population. Depending on the sampling method, a sample can have fewer, the same, or more observations than the population.
+
+More than one sample can be derived from the same population.
+
+Random sampling is a sampling method with the following properties:
+
+- The population consists of N elements
+
+- The sample consists of n elements
+
+- All possible samples of n elements are equally likely to occur
+
+There are many ways to obtain a random sample. One example is the lottery method.
+
+Suppose we use the lottery method to select a random sample. After we pick a ball/number from the bowl, we can put the ball/number aside or we can put it back into the bowl. If we put the ball/number back in the bowl, it may be selected more than once; if we put it aside, it can selected only one time. When a population element can be selected more than one time, we are sampling with replacement. When a population element can be selected only one time, we are sampling without replacement.
+
+Statistical analysis is not appropriate when non-random sampling methods are used.
+
+A measurable characteristic of a population is called a parameter but a measurable characteristic of a sample is called a statistic.
+
+#### Variables
+
+In statistics, a variable is an attribute that describes an entity (e.g., person, thing, etc) and the value of this attribute can "vary" from one entity to another. For example, a person's hair color is a variable that can have the value of "blond" for one person and "brunette" for another.
+
+Variables can be classified as qualitative or quantitative or by the four scales of measurement:
+
+The four scales of measurement are: indicates difference, indicates direction of difference, indicates amount of difference, has absolute zero.
+
+- Qualitative (aka categorical)
+  - Nominal
+  - Ordinal
+- Quantitative (aka numeric)
+  - Interval
+  - Ratio
+
+### Histograms and distributions (and Probability, frequentist interpretation)
+
+### Mean, median, variance, standard deviation
+
+### Standard deviation vs Standard error
+
+### Sampling from a distribution
+
+### Sampling from a population
+
+### Sampling error vs Standard error (and Bootstrapping)
+
+Sampling error is the difference between the sample statistic and the population parameter.
+
+### Sampling error vs Sampling bias
+
+### The reproducibility crisis
+
+### Experimental vs Non-Experimental/Observational study/research
+
+In an experimental study, a variable is not only something that we can measure, but also something that we can manipulate or control for.
+
+An independent variable, sometimes called an experimental or predictor variable, is a variable that is being manipulated in an experiment in order to observe the effect on a dependent variable, sometimes called an outcome variable.
+
+Experimental research: In experimental research, the aim is to manipulate an independent variable(s) and then examine the effect that this change has on a dependent variable(s). Since it is possible to manipulate the independent variable(s), experimental research has the advantage of enabling a researcher to identify a cause and effect between variables.
+
+Non-experimental research: In non-experimental research, the researcher does not manipulate the independent variable(s). This is not to say that it is impossible to do so, but it will either be impractical or unethical to do so. Whilst it is not possible to identify the cause and effect between the variables, we can still examine the association or relationship between them.
+
+### Technical vs Biological replicates (and Experimental design)
+
+
+
+
+
+
+
+## Probability theory
+
+### Experiments, outcomes and events
+
+In probability theory, an **experiment** (or trial) is any procedure that can be infinitely repeated and has a well-defined set of possible outcomes, known as the **sample space**. When an experiment is conducted, one (and only one) outcome results. An experiment/trial is said to be **random** if it has more than one possible outcome, and **deterministic** if it has only one. A random experiment that has exactly two possible outcomes is known as a Bernoulli trial.
+
+A set of one or more possible outcomes of an experiment is known as an **event** (e.g., the samples space is the event that contains all possible outcomes).
+
+### Mathematical definition of probability
+
+Mathematically, probability is a function that maps a certain event to a real number between 0 and 1.
+
+There are several interpretations of what this mathematical function represents in reality.
+
+  - Classical interpretation
+  - Logical interpretation
+  - Frequentist interpretation
+  - Bayesian interpretation
+
+### Classical interpretation of probability
+
+Probability as relative frequency/ratio of that outcome/event/data over an infinite series of data generation events [Probability: The Classical Interpretation](https://youtu.be/CDwZKyxk6Q4)
+
+
+Frequentist interpretation (probability of the data given an hypothesis) vs Bayesian/Subjectivits interpretation (probability of an hypothesis given the data)
+
+[Interpretations of the Probability Concept](https://youtu.be/45Dj0t-n4N0)
+
+Given a data generation process/model/hypothesis, 
+
+
+In the case of rolling a fair dice as the data generation process, P(A) = number of "favorable" cases / total number of "equally possible" cases
+
+** Probability theory
+
+In probability theory, an outcome is the result of an experiment/an observation/a random? trial. Each outcome is unique and independent of other outcomes.
+
+An event is a set of outcomes, it can contain all possible outcomes (in which case it is also called the sample space), a subset of all possible outcomes, or a single outcome.
+
+The event that contains all possible outcomes of an experiment is its sample space. A single outcome can be a part of many different events. Typically, when the sample space is finite, any subset of the sample space is an event.
+
+
+ 
+
+P(A) = Real number between 0 and 1 for event/outcome A
+
+P(B) = Real number between 0 and 1 for event/outcome B
+
+P(!A) = 1 - P(A)
+
+P(A and B) = 
+
+P(A or B) =
+
+Observations, Sample, IIDs = Independent and identically distributed random variables
+
+
+
+Probability (P) of the data given a distribution vs Likelihood (L) of a distribution given the data.
+
+[StatQuest: Probability vs Likelihood](https://youtu.be/pYxNSUDSFH4)

@@ -23,6 +23,9 @@ ChIP pipeline:
 
 To get a ChIP-seq negative control, sequence the output from step #2.
 
+http://www.nature.com/nrg/journal/v10/n10/full/nrg2641.html
+
+
 
 ## ChIP-seq peak calling using [MACS](http://liulab.dfci.harvard.edu/MACS) (Model-based analysis for ChIP-seq)
 
@@ -88,8 +91,6 @@ Pioneering TFs (e.g., PU.1) for cell-type specific binding of signal-dependent T
 
 [PMID:17013392](http://www.ncbi.nlm.nih.gov/pubmed/17013392)
 
-[BETA software suite](http://cistrome.org/BETA/) 
-
 http://www.nature.com/nprot/journal/v8/n12/full/nprot.2013.150.html
 
 ---
@@ -98,4 +99,29 @@ The [Cistrome Project](http://cistrome.org/Cistrome/Cistrome_Project.html):
 
 - [Cistrome Data Browser](http://cistrome.org/db)
 - [Cistrome Analysis Pipeline](http://cistrome.org/ap)
+- [BETA software suite](http://cistrome.org/BETA)
+
+
+The BETA software suite integrates ChIP-seq data and gene expression data. It has three major functions:
+
+- Predict if a factor has an activating or repressing function
+- Identify the motifs enriched in a set of ChIP-seq peaks
+- Infer a factor's direct target genes
+
+BETA looks at ChIP-seq binding and based on their distance to transcription start site assigns regulatory potential. It can use constitutive CTCF binding sites to find insulators that block interaction between TF binding and a nearby gene. BETA also examines the expression (esp differential expression between factor on and factor off) data. Genes with high regulatory potential and high differential expression are called as direct targets.
+
+The BETA basic subcommand predicts the activating or repressing function of a factor and its direct target genes, and needs the ChIP-seq peak data and the matched gene expression (RNA-seq/microarray) data.
+
+The BETA plus subcommand performs the BETA basic analysis plus the motifs analysis, and needs the ChIP-seq peak data, the matched gene expression (RNA-seq/microarray) data, and the reference genome.
+
+The BETA minus subcommand predicts the direct target genes, and only needs the ChIP-seq peak data.
+
+BETA output consists of:
+
+- Predicted target genes
+- Peaks associated with target genes
+- Prediction of activating or repressing function of a factor
+- Motifs enriched in ChIP-seq peaks
+
+
 

@@ -1,0 +1,498 @@
+---
+title: "Meth-seq"
+author: "Edoardo “Dado” Marcora"
+date: "September 12, 2012"
+output: html_document
+---
+
+## CpGs (and methylated CpGs)
+
+CpGs, if methylated, usually mark inactive chromatin and are also inherited. A Meth-CpG can be thought as a fifth kind of bp (it is methylated on both DNA strands and the methylation status is maintained through DNA replication) in the epigenome. Therefore, two cell types can have different epigenomes while containing the same genome.
+
+DNA sequence/genome is relatively stable in cell development. In fact, all somatic cells in our bodies are believe to have almost identical DNA/genome. DNA methylation and other epigenetic outcomes are considered to play a major part in controlling and maintaining differential gene expression across, e.g., different cell types.
+
+```{r}
+library("rafalib")
+install_bioc()
+biocVersion()
+tryCatch(library("minfi"), error = function(c) biocLite("minfi")) 
+packageVersion("minfi")
+
+library(BSgenome.Hsapiens.UCSC.hg19)
+
+chr22 = Hsapiens[["chr22"]]
+s = subseq(chr22, start = 23456789, width = 1000)
+print(as.character(s))
+
+# GC content
+letterFrequency(s, "GC", as.prob = TRUE)
+
+# CpG count
+countPattern("CG", s)
+
+# GpC count
+countPattern("GC", s)
+```
+
+## CpG islands
+
+CpGs are depleted across the genome and the ones that remain are often clustered in so called "CpG islands" which are often located near promoters.
+
+[CpG island definition by Gardiner-Garden and Frommer](http://www.ncbi.nlm.nih.gov/pubmed/3656447): Algorithmic definition of a CpG island that is used to create the list that is available in most genomic annotation databases.
+
+```{r}
+library(AnnotationHub)
+ah = AnnotationHub()
+
+query(ah, c("cpg", "hg19"))
+
+cgi = ah[["AH5086"]]
+
+class(cgi)
+
+# how many CpG islands in annotation?
+length(cgi)
+
+# reference genome of CpG islands annotation -> hg19
+genome(cgi)
+
+# load hg19
+library(BSgenome.Hsapiens.UCSC.hg19)
+genome(Hsapiens)
+
+# get the sequences in the reference genome corresponding to CpG islands
+cgi.seq= getSeq(Hsapiens, cgi)
+
+class(cgi.seq)
+
+# GC content of CpG islands
+cgi.gc_cont = letterFrequency(cgi.seq, "GC", as.prob = TRUE)
+median(cgi.gc_cont)
+hist(cgi.gc_cont)
+
+# freq of C in CpG islands
+cgi.c_freq = letterFrequency(cgi.seq, "C", as.prob = T)
+median(cgi.c_freq)
+hist(cgi.c_freq)
+
+# freq of G in CpG islands
+cgi.g_freq = letterFrequency(cgi.seq, "G", as.prob = T)
+median(cgi.g_freq)
+hist(cgi.g_freq)
+```
+
+For each CpG island we have the proportion of Cs ($p_C$) and the proportion of Gs ($p_G$) we can compute the proportion of CG we expect to see by chance if all dinucleotides have the same probability of appearing. To a close approximation this expected proportion is simply pC×pG.
+
+The number of CpGs that we expect to see in a genomic interval of size L is then $L*p_C*p_G$. Once we have this expectation we can compute the observed to expected ratio.
+
+Compute the expected number of CpGs in each CpG island using the formula. For each island divide the observed number of CpGs by the expected number of CpGs.
+
+```{r}
+cgi.len = nchar(cgi.seq) # lengths of CpG islands
+
+cgi.CpGs.expected = cgi.len * cgi.c_freq * cgi.g_freq
+
+cgi.CpGs.observed = vcountPattern("CG", cgi.seq)
+
+cgi.CpGs.observed_expected_ratio = cgi.CpGs.observed / cgi.CpGs.expected
+
+median(cgi.CpGs.observed_expected_ratio)
+
+hist(cgi.CpGs.observed_expected_ratio)
+abline(v=1, col=2)
+
+hist(log2(cgi.CpGs.observed_expected_ratio))
+abline(v=0, col=2)
+
+
+cgi.GpCs.expected = cgi.len * cgi.c_freq * cgi.g_freq
+
+cgi.GpCs.observed = vcountPattern("GC", cgi.seq)
+
+cgi.GpCs.observed_expected_ratio = cgi.GpCs.observed / cgi.GpCs.expected
+
+median(cgi.GpCs.observed_expected_ratio)
+
+hist(cgi.GpCs.observed_expected_ratio)
+abline(v=1, col=2)
+
+hist(log2(cgi.GpCs.observed_expected_ratio))
+abline(v=0, col=2)
+```
+
+Note that the CpG observed to expected ratio is below 1 and that few islands actually surpass a ratio of 1 or more. However, for the rest of the genome the observed to expected ratio is substantially smaller. To look at regions that are not islands let's shift the islands we have by 20,000.
+
+To avoid problems, we will restrict our analysis to the mapped chromosomes and define the non CpG islands by shifting the known ones by 20Kb:
+
+```{r}
+mapped_chrs = seqlevels(cgi)[1:24]
+index = which(seqnames(cgi) %in% mapped_chrs)
+
+noncgi = shift(cgi[index], 20000)
+```
+
+Some of these regions contain repeats or are unmapped so we remove regions that have 0 Cs or 0 Gs:
+
+```{r}
+noncgi.seq= getSeq(Hsapiens, noncgi)
+noncgi.seq.alpha = alphabetFrequency(noncgi.seq)
+keepIndex = noncgi.seq.alpha[, "G"] > 0 & noncgi.seq.alpha[, "C"] > 0 & noncgi.seq.alpha[, "N"] == 0
+noncgi.seq.alpha = noncgi.seq.alpha[keepIndex, ]
+noncgi.seq = noncgi.seq[keepIndex]
+```
+
+Next, w use `noncgi.seq.alpha` and `noncgi.seq` defined above to compute the expected number of CpGs we should see in each of the non CpG islands:
+
+```{r}
+noncgi.len = nchar(noncgi.seq) # lengths of non CpG islands
+
+noncgi.CpGs.expected = noncgi.len * noncgi.seq.alpha[, "C"]/noncgi.len * noncgi.seq.alpha[, "G"]/noncgi.len
+
+noncgi.CpGs.observed = vcountPattern("CG", noncgi.seq)
+
+noncgi.CpGs.observed_expected_ratio = noncgi.CpGs.observed / noncgi.CpGs.expected
+
+median(noncgi.CpGs.observed_expected_ratio)
+
+hist(noncgi.CpGs.observed_expected_ratio)
+abline(v=1, col=2)
+
+hist(log2(noncgi.CpGs.observed_expected_ratio))
+abline(v=0, col=2)
+
+
+boxplot(list(cgi = cgi.CpGs.observed_expected_ratio, noncgi = noncgi.CpGs.observed_expected_ratio))
+```
+
+## Bisulfite treatment
+
+Upon treatment with bisulfite CpGs that are not methylated are converted to TpGs. Therefore, by comparing the genome sequence before and after bisulfite treatment (using DNA-seq or a methylation array), we can map the methylated CpGs across the genome. Please note that the methylation level measured for a CpG is between 0 and 1 because it is an average of the methylation state (0 or 1) of that CpG in each cell in the sample.
+
+## Modeling DNA methylation measurements
+
+Normal vs cancer at CpG1 and CpG2 (at different chromosomal locations):
+
+![Normal vs cancer CpGs](./normal_vs_cancer_cpgs.png)
+
+Simple additive model where each methylation measurement is treated independently:
+
+![Simple CpG model](./simple_cpg_model.png)
+
+More complex functional model where each methylation measurement is treated in the context of other measurements that are nearby in the genome, i.e., as a function (loess or $l$) of genomic location to take into account the regional context/other measurements in the region:
+
+![Functional CpG model](./functional_cpg_model.png)
+
+This is based on the hypothesis that epigenetic marks can affect gene expression only when changing coordinately across a region.
+
+The model above can be used to find differentially methylated regions (DMRs).
+
+Genomic traceplot of normal vs cancer CpGs around CpG1:
+
+![Genomic traceplot of normal vs cancer CpGs around CpG1](./genomic_traceplot_of_normal_vs_cancer_cpgs_around_cpg1.png)
+
+Genomic traceplot of normal vs cancer CpGs around CpG2:
+
+![Genomic traceplot of normal vs tumor CpGs around CpG2](./genomic_traceplot_of_normal_vs_cancer_cpgs_around_cpg2.png)
+
+
+```{r}
+library("devtools")
+install_github("genomicsclass/coloncancermeth")
+library(coloncancermeth)
+data(coloncancermeth)
+
+dim(meth) # DNA methylation data
+dim(pd) # sample information
+length(gr) # GenomicRanges object with location of each CpG
+
+colnames(pd)
+table(pd$Status)
+
+normal_idx <- which(pd$Status=="normal")
+cancer_idx <- which(pd$Status=="cancer")
+```
+
+Let's start by taking a quick look at the distribution of methylation measurements for the normal and the cancer samples
+
+```{r}
+i = normal_idx[1]
+plot(density(meth[, i], from = 0, to = 1), main = "", ylim = c(0,3), type = "n")
+for (i in normal_idx) {
+  lines(density(meth[, i], from = 0, to = 1), col = 1)
+}
+
+for (i in cancer_idx) {
+  lines(density(meth[, i], from = 0, to = 1), col = 2)
+}
+```
+
+We are interested in finding regions of the genome that are different between cancer and normal samples. Furthermore, we want regions that are consistenly different therefore we can treat this as a statistical inference problem. We can compute a t-statistic for each CpG (simple model) independently of nearby CpGs:
+
+```{r}
+library("limma")
+X <- model.matrix(~ pd$Status)
+fit <- lmFit(meth, X)
+eb <- ebayes(fit)
+
+splot(fit$coef[, 2], -log10(eb$p.value[, 2]), xlab = "Effect size", ylab = "-log10 p-value")
+```
+
+The volcano plot reveals many differences. However, if we have reason to believe that for DNA methylation to have an effect on gene expression a region of the genome needs to be affected, not just a single CpG, we should look beyond. Here is plot of the region surrounding the top hit:
+
+```{r}
+library(GenomicRanges)
+tophit_idx <- which.min(eb$p.value[, 2])
+tophit_loc <- gr[tophit_idx, ]
+print(tophit_loc)
+tophit_region = tophit_loc + 10000 # adding 10000 to a gr is like extending out the left and right boundary of the original gr by 10Kb on each side
+print(tophit_region)
+cpgs_in_tophit_region_idx <- gr %over% tophit_region
+cols = ifelse(pd$Status=="normal", 1, 2)
+chr = as.factor(seqnames(gr))
+pos = start(gr)
+
+matplot(pos[cpgs_in_tophit_region_idx], meth[cpgs_in_tophit_region_idx, ], col = cols, pch = 20, xlab = "genomic location", ylab = "methylation")
+
+plot(pos[cpgs_in_tophit_region_idx], fit$coef[cpgs_in_tophit_region_idx, 2], type = "b", xlab = "genomic location", ylab = "methylation difference")
+```
+
+## Finding DMRs
+
+The human genome still has many gaps and therefore we cannot define a region as a set of CpGs that are contiguos in our list, because they could million of base pairs apart on the genome when there is an intervening gap, as shown below.
+
+```{r}
+chr1_idx <- which(chr=="chr1")
+hist(log10(diff(pos[chr1_idx])), main = "", xlab = "log 10 method")
+```
+
+We can use the `clusterMaker` function in the `bumphunter` package to generate clusters of CpGs (or other ROIs) that are contiguos on the genome within a certain distance.
+
+```{r message=FALSE}
+library(bumphunter)
+cl = clusterMaker(chr, pos, maxGap = 500) #  assign a cluster/region ID to each CpG
+head(cl, n = 100)
+head(table(cl), n = 100)
+table(table(cl)) # shows the number of regions with 1, 2, 3, ... CpGs in them
+```
+
+Now let's consider two example regions, the one containing the top hit CpG and one where we already now there is consistent difference in methylation across several CpGs in the region.
+
+```{r}
+# select the region with the smallest value (top hit in the simple model)
+tophit_idx <- which(cl==cl[which.min(fit$coef[, 2])])
+matplot(pos[tophit_idx], meth[tophit_idx, ], col = cols, pch = 20, xlab = "genomic location", ylab = "methylation")
+
+x1 = pos[tophit_idx] # genomic location
+y1 = fit$coef[tophit_idx, 2] # methylation difference
+plot(x1 , y1, xlab = "genomic location", ylab = "methylation difference", ylim = c(-1,1))
+abline(h = c(-0.1,0,.1), lty = 2)
+```
+
+```{r}
+dmr_idx = which(cl==72201)
+
+matplot(pos[dmr_idx], meth[dmr_idx, ], col = cols, pch = 20, xlab = "genomic location", ylab = "methylation")
+
+x2=pos[dmr_idx]
+y2=fit$coef[dmr_idx, 2]
+plot(x2, y2, xlab = "genomic location", ylab = "methylation difference", ylim = c(-1,1))
+abline(h = c(-0.1,0,.1), lty = 2)
+```
+
+Because we are interested in prioritizing regions instead of single points, we need an alternative approach to integrate the signal across a region. If we assume that the real signal is smooth, we could use statistical smoothing techniques such as loess.
+
+```{r}
+lfit <- loess(y1 ~ x1, degree = 1, family = "symmetric", span = 1/2) # "symmetric" makes loess resistant to outliers
+plot(x1, y1, xlab = "genomic location", ylab = "methylation difference", ylim = c(-1,1))
+abline(h = c(-0.1,0,.1), lty = 2)
+lines(x1, lfit$fitted, col = 2)
+
+lfit <- loess(y2~x2, degree = 1, family = "symmetric", span = 1/2)
+plot(x2, y2, xlab = "genomic location", ylab = "methylation difference", ylim = c(-1,1))
+abline(h = c(-0.1,0,.1), lty = 2)
+lines(x2, lfit$fitted, col = 2)
+```
+
+The `bumphunter` function automates this procedure and other calculations (such as signal integration).
+
+```{r}
+res <- bumphunter(meth, X, chr = chr, pos = pos, cluster = cl, cutoff = 0.1, B = 0)
+# the cutoff argument specifies the interval above/below zero (methylation difference) that we use to exclude CpGs from the calculations, e.g., loess fitting
+# the cl argument is optional, but we provide it here because we have already calculated it
+
+str(res)
+tab <- res$table
+head(tab)
+```
+
+We now have a list of regions instead of single points. Here we look at the first region, i.e., the region with the highest rank if we order by area (signal integration):
+
+```{r}
+topdmr_idx = (tab[1, 7]-3):(tab[1, 8]+3) # plus/minus three to add some space around i
+matplot(pos[topdmr_idx], meth[topdmr_idx, , drop = TRUE], col = cols, pch = 20, xlab = "genomic location", ylab = "methylation", ylim = c(0,1))
+plot(pos[topdmr_idx], res$fitted[topdmr_idx, 1], xlab = "genomic location", ylab = "methylation difference", ylim=c(-1,1))
+abline(h = c(-0.1, 0, .1), lty = 2)
+```
+
+The `bumphunter` function also allows for smoothing and permutation-based inference for the regions. However, we do not recommend running the function with these options without the ability to parallelize (due to the computational cost of permutations).
+
+---
+
+Use the methylation profiles to compute a Euclidean distance between each sample and the `cmdscale` function to create an MDS plot that graphically shows approximate distances between the samples, using color to distinguish cancer and normal samples.
+
+```{r}
+d = dist(t(meth))
+cols = ifelse(pd$Status=="normal", 1, 2) # or cols = as.numeric(pd$Status)
+mds = cmdscale(d)
+plot(mds, col = cols, pch = 20)
+legend("topleft", levels(pd$Status), col = 1:2, pch = 20)
+```
+
+For each CpG compute p-values for the cancer versus normal comparison using the `limma` package:
+
+```{r}
+library(limma)
+X = model.matrix(~ pd$Status)
+fit = lmFit(meth, X)
+eb = ebayes(fit)
+pvals = eb$p.value[, 2]
+library(qvalue)
+
+# What proportion of the CpGs show statistically significant differences?
+qvals = qvalue(pvals)$qvalue
+mean(qvals <= .05)
+
+# What proportion of the differentially methylated CpGs are, on average, higher in cancer compared to normal samples?
+significant_cpgs_idx = which(qvals <= 0.05)
+significant_cpgs_diff = fit$coef[significant_cpgs_idx, 2]
+mean(significant_cpgs_diff > 0)
+
+# What proportion of the differentially methylated CpGs are in CpG islands?
+mean(gr[significant_cpgs_idx] %over% cgi)
+
+# What proportion of the differentially methylated CpGs in CpG islands are, on average, higher in cancer compared to normal samples?
+islands = gr[significant_cpgs_idx] %over% cgi
+hypermethylated = fit$coef[significant_cpgs_idx, 2] > 0
+prop.table(table(islands, hypermethylated))
+```
+
+Now we will use the `bumphunter` package and function to separate the differentially methylated CpGs into groups.
+
+```{r}
+library(bumphunter)
+X = model.matrix(~ pd$Status)
+chr = as.character(seqnames(gr))
+res = bumphunter(meth, X, chr = chr, pos = start(gr), cutoff=0.1)
+head(res$table)
+```
+
+The `bumphunter` function returns a table of regions. In addition, it has options to assess uncertainty, which are turned on through the B argument. However, these options make this function computationally intensive. We therefore skip this step here and, instead of filtering by statistical significance, filter by region size.
+
+```{r}
+dmrs = res$table[res$table$L >= 3, ]
+dmrs = makeGRangesFromDataFrame(dmrs)
+
+# For the regions in dmrs, find the distance to the closest island
+hits = distanceToNearest(dmrs, cgi)
+head(hits)
+dist = mcols(hits)$distance
+
+# What proportion of DMRs overlap a CpG island?
+mean(dist==0)
+
+# What proportion of DMRs are within 2000 basepairs from a CpG island, but do not overlap?
+mean(dist!=0 & abs(dist) <= 2000)
+```
+
+## Reading raw 450K DNA methylation array data
+
+The first step is to determine the basename of the idat files. Note that for each sample there are two files: one for red and green channels respectively. These files are found here: https://github.com/genomicsclass/rawdata/tree/master/idats
+
+```{r}
+path <- "idats"
+list.files(path)
+
+# read the sample information including the basename of the idat files (red and green) corresponding to each sample
+targets <- read.csv("./idats/targets.csv", as.is=TRUE)
+names(targets)
+targets$Basename
+
+# How many cancer samples are included in this dataset?
+table(targets$Status)
+
+# read the idat files
+library(minfi)
+targets$Basename <- file.path(path, targets$Basename)
+rgset <- read.450k(targets$Basename, verbose = TRUE)
+class(rgset)
+pData(rgset) <- targets
+```
+
+Now that we loaded the idat files using the `read.450k` function of the `minfi` package, we have access to the raw data (red an green intensities):
+
+```{r}
+dim(getRed(rgset))
+dim(getGreen(rgset))
+```
+
+If you are not interested in developing preprocessing algorithms then you can use the built in preprocessing algorithm developed by Illumina and go straight to the `mset` object that give you access to methylation estimates:
+
+```{r}
+# biocLite(c("IlluminaHumanMethylation450kmanifest", "IlluminaHumanMethylation450kanno.ilmn12.hg19"))
+mset <- preprocessIllumina(rgset)
+class(mset)
+```
+
+However, for this object to be useful we want to have the locations of each CpG and to do that we need to map the CpGs to the reference genome (in this case hg19 from `IlluminaHumanMethylation450kanno.ilmn12.hg19`).
+
+```{r}
+mset <- mapToGenome(mset)
+```
+
+Now we are ready to obtain the methylation values and CpG locations.
+
+```{r}
+getBeta(mset, type="Illumina") # the argument type = "Illumina" specifies the Illumina procedure to estimating methylation values
+
+granges(mset)
+
+# What is the estimate of the CpG at location 153807318 on chr4 for sample "5775041068_R04C01"?
+sample_idx = which(pData(mset)$Basename=="idats/5775041068_R04C01")
+cpg_idx = which(seqnames(mset)=="chr4" & start(granges(mset))==153807318)
+getBeta(mset, type = "Illumina")[cpg_idx, sample_idx]
+```
+
+We can also use functions such as `getSex` and `getQC` on the `mset` object:
+
+```{r}
+sex <- getSex(mset)
+plotSex(sex)
+plot(as.matrix(getQC(mset)))
+```
+
+The best way to find DMRs between cancer and normal samples is:
+
+```{r}
+# convert mset to a GenomicRatioSet
+grset = ratioConvert(mset, what = "beta", type = "Illumina")
+class(grset)
+help("ratioConvert")
+
+X = model.matrix(~ pData(grset)$Status)
+res = bumphunter(grset, X, cutoff = 0.1)
+
+# area/integrated signal of first/top region
+res$table[1, "area"]
+```
+
+Same as above, but with smoothing (the default behavior for bumphunter is to not smooth the data). In order to make the code run faster for the purpose of this demo, we will only run it on chr22.
+
+```{r}
+grset2 = grset[which(seqnames(grset)=="chr22"), ]
+
+X = model.matrix(~ pData(grset2)$Status)
+
+res = bumphunter(grset2, X, cutoff = 0.1) # without smoothing
+
+res2 = bumphunter(grset2, X, cutoff = 0.1, smooth = TRUE) # with smoothing
+```

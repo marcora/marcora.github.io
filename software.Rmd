@@ -7,16 +7,23 @@ output: html_document
 
 ```{r eval=FALSE}
 install.packages("psych")
-install.packages("lubridate")
-install.packages("stringr")
-install.packages("tidyr")
 install.packages("dplyr")
 install.packages("magrittr")
+install.packages("tidyr")
+install.packages("stringr")
+install.packages("knitr")
 install.packages("printr")
+install.packages("DT")
 install.packages("latex2exp")
+install.packages("lubridate")
+install.packages("readxl")
 install.packages("sqldf")
-install.packages("ggplot2")
+install.packages("testthat")
 install.packages("devtools")
+install.packages("ggplot2")
+install.packages("ggvis")
+install.packages("Amelia") # for plotting missing data using 'missmap' function
+install.packages("MASS") # for 'stepAIC' function
 ```
 
 ## R packages (science)
@@ -35,14 +42,13 @@ install.packages("corrplot")
 ```{r eval=FALSE}
 library(devtools)
 install_github("hadley/bigvis")
-install_github("yihui/printr")
 install_github("baptiste/gridextra")
 ```
 
 ## Bioconductor packages
 
 ```{r eval=FALSE}
-source("http://bioconductor.org/biocLite.R")
+source("http://bioconductor.org/biocLite.R") # or install_bioc() from rafalib
 biocLite("Biostrings")
 biocLite("Biobase") # -> ExpressionSet
 biocLite("IRanges")
@@ -68,6 +74,11 @@ biocLite("BSgenome.Hsapiens.UCSC.hg19")
 
 biocLite("Mus.musculus")
 biocLite("BSgenome.Mmusculus.UCSC.mm10")
+
+# Meth-seq
+biocLite("minfi")
+biocLite(c("IlluminaHumanMethylation450kmanifest","IlluminaHumanMethylation450kanno.ilmn12.hg19"))
+biocLite("bumphunter")
 
 biocLite("WGCNA")
 biocLite("Rsubread")
@@ -112,4 +123,7 @@ biocLite("npGSEA")
 biocLite("RSNPset")
 biocLite("cpvSNP")
 biocLite("RRHO")
+
+
+biocLite("snpStats")
 ```

@@ -9,3 +9,4 @@ title: Edoardo &quot;Dado&quot; Marcora's notes
     - DNA-seq
         - [Variant discovery and genotyping](./methods/ht-seq/dna-seq/)
 - [Genome-wide association studies](./methods/gwas/)
+- [Fundamentals of Statistics](./statistics/fundamentals/)

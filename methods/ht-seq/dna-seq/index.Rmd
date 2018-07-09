@@ -23,7 +23,7 @@ output: html_document
 - Call variants using [GATK Best Practices](https://www.broadinstitute.org/gatk/guide/best-practices?bpm=DNAseq) or [FreeBayes](https://github.com/ekg/freebayes) [BAM &rarr; VCF]
     - [FreeBayes tutorial](http://clavius.bc.edu/~erik/CSHL-advanced-sequencing/freebayes-tutorial.html)
 - Filter variants by quality using vcffilter from [vcflib](https://github.com/ekg/vcflib)
-- Inspect variants using stats from [bcftools](http://samtools.github.io/bcftools/)
+- Inspect variants using stats from [bcftools](http://samtools.github.io/bcftools/) (bcftools "replaces" vcftools)
     - See also [bgzip and tabix](http://www.htslib.org/doc/tabix.html)
 - Compare variants to the [Genome in a bottle](https://sites.stanford.edu/abms/giab) (GIAB) "gold standard"
 - Annotate variants (e.g., with rsids from dbSNP) using annotate from [bcftools](http://samtools.github.io/bcftools/)
@@ -31,14 +31,20 @@ output: html_document
 - Filter variants based on predicted functional impact using:
     - [ANNOVAR](http://annovar.openbioinformatics.org/)
     - [VEP](http://www.ensembl.org/info/docs/tools/vep/index.html)
-    - snpEff
+    - [snpEff](http://snpeff.sourceforge.net/)
     - See also [GEMINI](http://gemini.readthedocs.org/)
 
 
+
+
   
-- [SAM/BAM and VCF formats](http://samtools.github.io/hts-specs/)
+- [SAM/BAM and VCF/BCF format specifications](http://samtools.github.io/hts-specs/)
+- [GATK](https://www.broadinstitute.org/gatk/)
+- [Picard](http://broadinstitute.github.io/picard/)
+---
 - [Quanto](http://biostats.usc.edu/software) or [SEQPower](http://www.bioinformatics.org/spower/) for power calcs
 - [Bpipe](https://github.com/ssadedin/bpipe), [SpeedSeq](https://github.com/hall-lab/speedseq) or [bcbio](https://bcbio-nextgen.readthedocs.org/) for pipeline/workflow generation
+- [GKNO](http://gkno.me/) or [Galaxy](https://galaxyproject.org/)
 
 
 https://www.biostars.org/p/2909/
