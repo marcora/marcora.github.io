@@ -59,11 +59,15 @@ devtools::install_github("drveera/ggman")
 
 ## https://github.com/statgen/locuszoom-standalone
 
-install.packages("ggfortify")
 install.packages("metap")
 install.packages("corrplot")
 install.packages("cowplot")
 install.packages("gplots")
+
+devtools::install_github("hrbrmstr/hrbrthemes")
+devtools::install_github("raivokolde/pheatmap") # install.packages(pheatmap)
+devtools::install_github("lme4/lme4") # install.packages(lme4)
+
 
 install.packages("latex2exp")
 install.packages("LSD")
@@ -79,12 +83,19 @@ install.packages("googlesheets")
 install.packages("jsonlite")
 install.packages("sqldf")
 install.packages("data.table")
+install.packages("rlist")
 
 install.packages("car")
 install.packages("psych")
 
+install.packages("httr")
+install.packages("imager") # http://dahtah.github.io/imager/
+
+install.packages("ggrepel") # https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html
+install.packages("ggfortify")
+
 ## machine learning
-install.packages("mlr")
+install.packages("mlr") # https://mlr-org.github.io/mlr/
 install.packages("xgboost")
 install.packages("caret")
 install.packages("gbm")
@@ -95,5 +106,8 @@ install.packages("randomForest")
 ## http://slidify.org/
 ## https://rstudio.github.io/DT/
 ## http://ggvis.rstudio.com/
+## https://tensorflow.rstudio.com/
+
+## http://www.ggplot2-exts.org/index.html
 
 ## https://www.computerworld.com/article/2921176/business-intelligence/great-r-packages-for-data-import-wrangling-visualization.html
