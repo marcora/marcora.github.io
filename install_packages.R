@@ -64,9 +64,9 @@ install.packages("corrplot")
 install.packages("cowplot")
 install.packages("gplots")
 
-devtools::install_github("hrbrmstr/hrbrthemes")
-devtools::install_github("raivokolde/pheatmap") # install.packages(pheatmap)
-devtools::install_github("lme4/lme4") # install.packages(lme4)
+install.packages("hrbrthemes")
+install.packages("pheatmap")
+install.packages("lme4")
 
 
 install.packages("latex2exp")
