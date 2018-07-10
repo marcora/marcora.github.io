@@ -82,14 +82,18 @@ install.packages("data.table")
 
 install.packages("car")
 install.packages("psych")
+
+## machine learning
+install.packages("mlr")
+install.packages("xgboost")
 install.packages("caret")
-install.packages("mgcv")
+install.packages("gbm")
+install.packages("prophet")
 install.packages("randomForest")
-install.packages("lme4")
-install.packages("nlme")
-install.packages("multcomp")
-install.packages("vcd")
-install.packages("glmnet")
-install.packages("survival")
+
+## https://plot.ly/
+## http://slidify.org/
+## https://rstudio.github.io/DT/
+## http://ggvis.rstudio.com/
 
 ## https://www.computerworld.com/article/2921176/business-intelligence/great-r-packages-for-data-import-wrangling-visualization.html
