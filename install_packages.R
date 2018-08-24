@@ -22,6 +22,8 @@ install.packages("tidyverse")
 ## magrittr
 ## glue
 
+install.packages("zeallot")
+
 install.packages("devtools")
 
 devtools::install_github("ropensci/writexl")
@@ -37,6 +39,7 @@ biocLite("ggbio") # module load mysql
 biocLite("DESeq2")
 biocLite("limma")
 biocLite("edgeR")
+biocLite("gage")
 
 biocLite("ComplexHeatmap")
 
